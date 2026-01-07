@@ -11,7 +11,9 @@ website:
       - href: 01-import-data.qmd
         text: "Dados"
       - href: 02-indicators.qmd
-        text: "Indicators"  
+        text: "Indicadores" 
+      - href: 03-city-maps-example.qmd
+        text: "Mapas" 
 format:
   html:
     theme:

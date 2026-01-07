@@ -9,6 +9,7 @@ Este projeto processa e analisa os microdados do Censo Demográfico 2022.
 
 -   `01-import-data.qmd` - Pipeline completo de download e conversão dos dados do IBGE
 -   `02-indicators.qmd` - Criação dos indicadores exibidos na plataforma GeoReDUS
+-   `03-city-maps-example.qmd` - Exemplos de mapas de uma cidade brasileira
 -   `data/` - Dados brutos e processados
 -   `images/` - Imagens usadas
 -   `docs/` - Site gerado (GitHub Pages)
@@ -17,4 +18,4 @@ Este projeto processa e analisa os microdados do Censo Demográfico 2022.
 
 1.  Execute o pipeline de importação: [**01-import-data.qmd**](01-import-data.qmd)
 
-    Os dados serão processados e organizados automaticamente
+    Os dados serão processados e organizados automaticamente (...)

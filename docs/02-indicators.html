@@ -138,7 +138,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="./02-indicators.html" aria-current="page"> 
-<span class="menu-text">Indicators</span></a>
+<span class="menu-text">Indicadores</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./03-city-maps-example.html"> 
+<span class="menu-text">Mapas</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -481,21 +485,21 @@ Cada linha indica uma nova <strong>coluna derivada.</strong></p>
 <h3 class="anchored" data-anchor-id="exportando-os-indicadores-de-domicílio">5. Exportando os indicadores de Domicílio</h3>
 <p>As colunas criadas são unidas em novos csvs:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cn22dom <span class="ot">&lt;-</span> basico <span class="sc">%&gt;%</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(domicilios, <span class="at">by=</span><span class="st">"cd_setor"</span>) <span class="sc">%&gt;%</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cn22dom_vars <span class="ot">&lt;-</span> basico <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(domicilios, <span class="at">by =</span> <span class="st">"cd_setor"</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_setor =</span> cd_setor,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_bairro =</span> cd_bairro,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_distrito =</span> cd_dist,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_subdistrito =</span> cd_subdist,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_municipio =</span> cd_mun,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">situacao_setor =</span> situacao,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_uf =</span> cd_uf,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_bairro =</span> nm_bairro,</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_distrito =</span> nm_dist,</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_municipio =</span> nm_mun,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_setor        =</span> cd_setor,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_bairro       =</span> cd_bairro,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_distrito     =</span> cd_dist,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_subdistrito  =</span> cd_subdist,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_municipio    =</span> cd_mun,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">situacao_setor   =</span> situacao,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_uf           =</span> cd_uf,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_bairro      =</span> nm_bairro,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_distrito    =</span> nm_dist,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_municipio   =</span> nm_mun,</span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_subdistrito =</span> nm_subdist,</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_uf =</span> nm_uf</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_uf          =</span> nm_uf</span>
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>id_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
@@ -503,38 +507,29 @@ Cada linha indica uma nova <strong>coluna derivada.</strong></p>
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"situacao_setor"</span>,<span class="st">"cod_uf"</span>,</span>
 <span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"nome_bairro"</span>,<span class="st">"nome_distrito"</span>,<span class="st">"nome_municipio"</span>,<span class="st">"nome_subdistrito"</span>,<span class="st">"nome_uf"</span></span>
 <span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Exportar as variáveis absolutas (brutas ou compostas)</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>cn22dom_abs <span class="ot">&lt;-</span> cn22dom <span class="sc">%&gt;%</span>  </span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">all_of</span>(id_cols),</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ends_with</span>(<span class="st">"_0"</span>),</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ends_with</span>(<span class="st">"_1"</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Selecionar IDs + TODAS as variáveis de indicadores</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>cn22dom_vars <span class="ot">&lt;-</span> cn22dom_vars <span class="sc">%&gt;%</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">all_of</span>(id_cols),</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"_(0|1|2)$"</span>)  <span class="co"># 0 = absoluto simples, 1 = absoluto composto, 2 = relativo</span></span>
 <span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>cn22dom_abs <span class="sc">%&gt;%</span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_csv</span>(<span class="fu">sprintf</span>(<span class="st">"%s/cn22dom_abs.csv"</span>, pasta_out))</span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Exportar as variáveis relativas (porcentagens)</span></span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>cn22dom_rel <span class="ot">=</span> cn22dom <span class="sc">%&gt;%</span></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">all_of</span>(id_cols),</span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ends_with</span>(<span class="st">"_2"</span>)</span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>cn22dom_rel <span class="sc">%&gt;%</span></span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_csv</span>(<span class="fu">sprintf</span>(<span class="st">"%s/cn22dom_rel.csv"</span>, pasta_out))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Exportar arquivo único</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>  cn22dom_vars,</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sprintf</span>(<span class="st">"%s/cn22dom_vars.csv"</span>, pasta_out)</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="verificação-dos-indicadores-exportados" class="level3">
 <h3 class="anchored" data-anchor-id="verificação-dos-indicadores-exportados">6. Verificação dos indicadores exportados</h3>
-<section id="variáveis-absolutas" class="level4">
-<h4 class="anchored" data-anchor-id="variáveis-absolutas">6.1 Variáveis Absolutas</h4>
 <p>Olhar geral no csv:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(cn22dom_abs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(cn22dom_vars)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 468,099
-Columns: 28
+Columns: 42
 $ cod_setor                 &lt;chr&gt; "110001505000002", "110001505000003", "11000…
 $ cod_bairro                &lt;chr&gt; "1100015006", "1100015006", "1100015005", "1…
 $ cod_distrito              &lt;chr&gt; "110001505", "110001505", "110001505", "1100…
@@ -547,89 +542,22 @@ $ nome_distrito             &lt;chr&gt; "Alta Floresta D'Oeste", "Alta Floresta 
 $ nome_municipio            &lt;chr&gt; "Alta Floresta D'Oeste", "Alta Floresta D'Oe…
 $ nome_subdistrito          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
 $ nome_uf                   &lt;chr&gt; "Rondônia", "Rondônia", "Rondônia", "Rondôni…
+$ cn22_dom01_ocu_tot_1      &lt;dbl&gt; 336, 208, 85, 281, 291, 234, 329, 291, 100, …
+$ cn22_dom01_ocu_tot_mor_1  &lt;dbl&gt; 928, 556, 222, 783, 748, 631, 884, 762, 267,…
 $ cn22_dom02_dppo_tot_0     &lt;dbl&gt; 336, 208, 85, 281, 291, 234, 329, 291, 100, …
 $ cn22_dom02_dppo_tot_mor_0 &lt;dbl&gt; 928, 556, 222, 783, 748, 631, 884, 762, 267,…
 $ cn22_dom02_dppo_sex_m_0   &lt;dbl&gt; 428, 270, 108, 407, 373, 296, 403, 361, 141,…
 $ cn22_dom02_dppo_sex_f_0   &lt;dbl&gt; 500, 286, 114, 376, 375, 335, 481, 401, 126,…
 $ cn22_dom02_dpio_tot_0     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ cn22_dom03_apt_tot_0      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0,…
-$ cn22_dom03_apt_tot_mor_0  &lt;dbl&gt; 0, 0, 0, 3, 0, 0, 0, 0, 0, 3, 7, 0, 0, 0, 0,…
-$ cn22_dom03_apt_sex_m_0    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ cn22_dom03_apt_sex_f_0    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0,…
-$ cn22_dom01_ocu_tot_1      &lt;dbl&gt; 336, 208, 85, 281, 291, 234, 329, 291, 100, …
-$ cn22_dom01_ocu_tot_mor_1  &lt;dbl&gt; 928, 556, 222, 783, 748, 631, 884, 762, 267,…
 $ cn22_dom03_cas_tot_1      &lt;dbl&gt; 335, 208, 85, 280, 291, 234, 328, 291, 100, …
 $ cn22_dom03_cas_tot_mor_1  &lt;dbl&gt; 926, 556, 222, 780, 748, 631, 882, 762, 267,…
 $ cn22_dom03_cas_sex_m_1    &lt;dbl&gt; 427, 270, 108, 405, 373, 296, 402, 361, 141,…
 $ cn22_dom03_cas_sex_f_1    &lt;dbl&gt; 499, 286, 114, 375, 375, 335, 480, 401, 126,…
-$ cn22_dom03_6mor_tot_1     &lt;dbl&gt; 8, 3, 0, 15, 0, 0, 0, 4, 0, 0, 5, 3, 3, 0, 4…</code></pre>
-</div>
-</div>
-<p>Presença das 12 colunas de identificação do arquivo básico:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>id_presentes_abs <span class="ot">&lt;-</span> <span class="fu">sum</span>(id_cols <span class="sc">%in%</span> <span class="fu">names</span>(cn22dom_abs)) </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"- Absolutos:"</span>, id_presentes_abs, <span class="st">"/"</span>, <span class="fu">length</span>(id_cols), <span class="st">"IDs OK</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>- Absolutos: 12 / 12 IDs OK</code></pre>
-</div>
-</div>
-<p>Integridade dos dados numéricos:</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>- Dados absolutos:  OK </code></pre>
-</div>
-</div>
-<p>Verificar dados aleatórios das variáveis absolutas de um município:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># substitua pelo municipio que desejar </span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>municipio_escolhido <span class="ot">&lt;-</span> <span class="st">"Goiânia"</span>   </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  cn22dom_abs <span class="sc">%&gt;%</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(nome_municipio <span class="sc">==</span> municipio_escolhido) <span class="sc">%&gt;%</span>     </span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span>     </span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># substitua "dom01" pelo indicador que deseja verificar     </span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># substitua "tot" pelo recorte que deseja verificar     </span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(cod_setor, <span class="fu">matches</span>(<span class="st">"dom01.*tot"</span>)),    </span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="cn">Inf</span> </span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 10 × 3
-   cod_setor       cn22_dom01_ocu_tot_1 cn22_dom01_ocu_tot_mor_1
-   &lt;chr&gt;                          &lt;dbl&gt;                    &lt;dbl&gt;
- 1 520870705020016                  167                      333
- 2 520870705520036                   45                      134
- 3 520870705220006                  324                      730
- 4 520870705630034                  183                      623
- 5 520870705060009                  108                      265
- 6 520870705010012                  202                      403
- 7 520870705330074                  245                      685
- 8 520870705120016                  259                      648
- 9 520870705410003                  219                      586
-10 520870705450001                  332                      946</code></pre>
-</div>
-</div>
-</section>
-<section id="variáveis-relativas" class="level4">
-<h4 class="anchored" data-anchor-id="variáveis-relativas">6.1 Variáveis Relativas</h4>
-<p>Olhar geral no csv:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(cn22dom_rel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 468,099
-Columns: 26
-$ cod_setor                 &lt;chr&gt; "110001505000002", "110001505000003", "11000…
-$ cod_bairro                &lt;chr&gt; "1100015006", "1100015006", "1100015005", "1…
-$ cod_distrito              &lt;chr&gt; "110001505", "110001505", "110001505", "1100…
-$ cod_subdistrito           &lt;chr&gt; "11000150500", "11000150500", "11000150500",…
-$ cod_municipio             &lt;chr&gt; "1100015", "1100015", "1100015", "1100015", …
-$ situacao_setor            &lt;chr&gt; "Urbana", "Urbana", "Urbana", "Urbana", "Urb…
-$ cod_uf                    &lt;chr&gt; "11", "11", "11", "11", "11", "11", "11", "1…
-$ nome_bairro               &lt;chr&gt; "Redondo", "Redondo", "Princesa Isabel", "Pr…
-$ nome_distrito             &lt;chr&gt; "Alta Floresta D'Oeste", "Alta Floresta D'Oe…
-$ nome_municipio            &lt;chr&gt; "Alta Floresta D'Oeste", "Alta Floresta D'Oe…
-$ nome_subdistrito          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-$ nome_uf                   &lt;chr&gt; "Rondônia", "Rondônia", "Rondônia", "Rondôni…
+$ cn22_dom03_apt_tot_0      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0,…
+$ cn22_dom03_apt_tot_mor_0  &lt;dbl&gt; 0, 0, 0, 3, 0, 0, 0, 0, 0, 3, 7, 0, 0, 0, 0,…
+$ cn22_dom03_apt_sex_m_0    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+$ cn22_dom03_apt_sex_f_0    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0,…
+$ cn22_dom03_6mor_tot_1     &lt;dbl&gt; 8, 3, 0, 15, 0, 0, 0, 4, 0, 0, 5, 3, 3, 0, 4…
 $ cn22_dom02_dppo_tot_2     &lt;dbl&gt; 1.000000, 1.000000, 1.000000, 1.000000, 1.00…
 $ cn22_dom02_dppo_tot_mor_2 &lt;dbl&gt; 1.0000000, 1.0000000, 1.0000000, 1.0000000, …
 $ cn22_dom02_dppo_sex_f_2   &lt;dbl&gt; 0.5387931, 0.5143885, 0.5135135, 0.4802043, …
@@ -649,25 +577,19 @@ $ cn22_dom03_6mor_tot_2     &lt;dbl&gt; 0.02380952, 0.01442308, 0.00000000, 0.05
 <p>Presença das 12 colunas de identificação do arquivo básico:</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>- Relativos:  12 / 12 IDs OK</code></pre>
+<pre><code>- IDs: 12 / 12 OK</code></pre>
 </div>
 </div>
-<p>Integridade dos dados numéricos:</p>
+<section id="integridade-dos-dados-numéricos" class="level4">
+<h4 class="anchored" data-anchor-id="integridade-dos-dados-numéricos">Integridade dos dados numéricos</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>vars_rel <span class="ot">&lt;-</span> <span class="fu">names</span>(cn22dom_rel)[<span class="sc">!</span><span class="fu">names</span>(cn22dom_rel) <span class="sc">%in%</span> id_cols]</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>conta_problemas <span class="ot">&lt;-</span> <span class="cf">function</span>(x){   </span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(     </span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NA"</span>     <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(x) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.nan</span>(x)),  <span class="co"># NA puro</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NaN"</span>    <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">is.nan</span>(x)),               <span class="co"># NaN     </span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Inf"</span>    <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">is.infinite</span>(x) <span class="sc">&amp;</span> x <span class="sc">&gt;</span> <span class="dv">0</span>),  <span class="co"># +Inf     </span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NegInf"</span> <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">is.infinite</span>(x) <span class="sc">&amp;</span> x <span class="sc">&lt;</span> <span class="dv">0</span>)   <span class="co"># -Inf   </span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    ) </span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  }  </span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>problemas_tipo <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">sapply</span>(cn22dom_rel[vars_rel], conta_problemas))  </span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>problemas_tipo</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>- Dados numéricos: AVISO: 252282 problemas encontrados </code></pre>
+</div>
+</div>
+<p>Se houver problemas, onde estão:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>problemas_tipo[ <span class="fu">rowSums</span>(problemas_tipo) <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                          NA   NaN Inf NegInf
 cn22_dom02_dppo_tot_2      0 18011   0      0
@@ -684,6 +606,36 @@ cn22_dom03_apt_tot_mor_2   0 18011   0      0
 cn22_dom03_apt_sex_m_2     0 18019   0      0
 cn22_dom03_apt_sex_f_2     0 18067   0      0
 cn22_dom03_6mor_tot_2      0 18011   0      0</code></pre>
+</div>
+</div>
+</section>
+<section id="verificação-amostral-por-município" class="level4">
+<h4 class="anchored" data-anchor-id="verificação-amostral-por-município">Verificação amostral por município</h4>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>municipio_escolhido <span class="ot">&lt;-</span> <span class="st">"Goiânia"</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>cn22dom_vars <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(nome_municipio <span class="sc">==</span> municipio_escolhido) <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    cod_setor,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"dom01.*tot"</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">width =</span> <span class="cn">Inf</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 3
+   cod_setor       cn22_dom01_ocu_tot_1 cn22_dom01_ocu_tot_mor_1
+   &lt;chr&gt;                          &lt;dbl&gt;                    &lt;dbl&gt;
+ 1 520870705120019                  255                      649
+ 2 520870705020005                  291                      806
+ 3 520870705440017                  270                      649
+ 4 520870705390018                  298                      846
+ 5 520870705510031                  223                      639
+ 6 520870705360036                  179                      532
+ 7 520870705100005                  347                      892
+ 8 520870705160031                  273                      724
+ 9 520870705130100                  204                      656
+10 520870705120058                  283                      694</code></pre>
 </div>
 </div>
 

@@ -189,21 +189,21 @@ As colunas criadas são unidas em novos csvs:
 ```{r}
 #| label: export-indicadores-dom
 
-cn22dom <- basico %>%
-  left_join(domicilios, by="cd_setor") %>% 
+cn22dom_vars <- basico %>%
+  left_join(domicilios, by = "cd_setor") %>% 
   rename(
-    cod_setor = cd_setor,
-    cod_bairro = cd_bairro,
-    cod_distrito = cd_dist,
-    cod_subdistrito = cd_subdist,
-    cod_municipio = cd_mun,
-    situacao_setor = situacao,
-    cod_uf = cd_uf,
-    nome_bairro = nm_bairro,
-    nome_distrito = nm_dist,
-    nome_municipio = nm_mun,
+    cod_setor        = cd_setor,
+    cod_bairro       = cd_bairro,
+    cod_distrito     = cd_dist,
+    cod_subdistrito  = cd_subdist,
+    cod_municipio    = cd_mun,
+    situacao_setor   = situacao,
+    cod_uf           = cd_uf,
+    nome_bairro      = nm_bairro,
+    nome_distrito    = nm_dist,
+    nome_municipio   = nm_mun,
     nome_subdistrito = nm_subdist,
-    nome_uf = nm_uf
+    nome_uf          = nm_uf
   )
 
 id_cols <- c(
@@ -211,110 +211,88 @@ id_cols <- c(
   "situacao_setor","cod_uf",
   "nome_bairro","nome_distrito","nome_municipio","nome_subdistrito","nome_uf"
 )
-# Exportar as variáveis absolutas (brutas ou compostas)
-cn22dom_abs <- cn22dom %>%  
+
+# Selecionar IDs + TODAS as variáveis de indicadores
+cn22dom_vars <- cn22dom_vars %>%
   select(
     all_of(id_cols),
-    ends_with("_0"),
-    ends_with("_1")
+    matches("_(0|1|2)$")  # 0 = absoluto simples, 1 = absoluto composto, 2 = relativo
   )
 
-cn22dom_abs %>%
-  write_csv(sprintf("%s/cn22dom_abs.csv", pasta_out))
-
-# Exportar as variáveis relativas (porcentagens)
-cn22dom_rel = cn22dom %>%
-  select(
-    all_of(id_cols),
-    ends_with("_2")
-  )
-
-cn22dom_rel %>%
-  write_csv(sprintf("%s/cn22dom_rel.csv", pasta_out))
+# Exportar arquivo único
+write_csv(
+  cn22dom_vars,
+  sprintf("%s/cn22dom_vars.csv", pasta_out)
+)
 ```
 
 ### 6. Verificação dos indicadores exportados
 
-#### 6.1 Variáveis Absolutas
-
 Olhar geral no csv:
 
 ```{r}
-#| label: check-glimpse-abs 
-glimpse(cn22dom_abs)
+#| label: check-glimpse-vars 
+glimpse(cn22dom_vars)
 ```
 
 Presença das 12 colunas de identificação do arquivo básico:
 
 ```{r}
-#| label: check-id-cols-abs 
-#| #| echo: false 
-id_presentes_abs <- sum(id_cols %in% names(cn22dom_abs)) 
-cat("- Absolutos:", id_presentes_abs, "/", length(id_cols), "IDs OK\n")
-```
-
-Integridade dos dados numéricos:
-
-```{r}
-#| label: check-dados-abs 
+#| label: check-id-cols-vars 
 #| echo: false 
-vars_abs <- names(cn22dom_abs)[!names(cn22dom_abs) %in% id_cols] 
-na_abs <- sum(sapply(cn22dom_abs[vars_abs], function(x) sum(is.na(x) | is.infinite(x)))) 
-cat("- Dados absolutos: ", ifelse(na_abs==0, "OK", paste("AVISO:", na_abs, "problemas!")), "\n")
+id_presentes <- sum(id_cols %in% names(cn22dom_vars))
+cat("- IDs:", id_presentes, "/", length(id_cols), "OK\n")
 ```
 
-Verificar dados aleatórios das variáveis absolutas de um município:
+#### Integridade dos dados numéricos
 
 ```{r}
-#| label: check-abs-mun 
-# substitua pelo municipio que desejar 
-municipio_escolhido <- "Goiânia"   
+#| label: check-dados-vars 
+#| echo: false 
+vars_num <- names(cn22dom_vars)[!names(cn22dom_vars) %in% id_cols]
 
-print(
-  cn22dom_abs %>%
-  filter(nome_municipio == municipio_escolhido) %>%     
-  slice_sample(n = 10) %>%     
-  # substitua "dom01" pelo indicador que deseja verificar     
-  # substitua "tot" pelo recorte que deseja verificar     
-    select(cod_setor, matches("dom01.*tot")),    
-    width = Inf 
+conta_problemas <- function(x) {
+  c(
+    "NA"     = sum(is.na(x) & !is.nan(x)),
+    "NaN"    = sum(is.nan(x)),
+    "Inf"    = sum(is.infinite(x) & x > 0),
+    "NegInf" = sum(is.infinite(x) & x < 0)
   )
+}
+
+problemas_tipo <- t(sapply(cn22dom_vars[vars_num], conta_problemas))
+
+total_problemas <- sum(problemas_tipo)
+
+cat(
+  "- Dados numéricos:",
+  ifelse(total_problemas == 0,
+         "OK",
+         paste("AVISO:", total_problemas, "problemas encontrados")),
+  "\n"
+)
 ```
 
-#### 6.1 Variáveis Relativas
-
-Olhar geral no csv:
+Se houver problemas, onde estão:
 
 ```{r}
-#| label: check-glimpse-rel 
-glimpse(cn22dom_rel)
+#| label: problems 
+problemas_tipo[ rowSums(problemas_tipo) > 0, ]
 ```
 
-Presença das 12 colunas de identificação do arquivo básico:
+#### Verificação amostral por município
 
 ```{r}
-#| label: check-id-cols-rel 
-#| echo: false
-id_presentes_rel <- sum(id_cols %in% names(cn22dom_rel)) 
-cat("- Relativos: ", id_presentes_rel, "/", length(id_cols), "IDs OK\n\n")
-```
+#| label: check-vars-mun
 
-Integridade dos dados numéricos:
+municipio_escolhido <- "Goiânia"
 
-```{r}
-#| label: check-dados-rel 
-vars_rel <- names(cn22dom_rel)[!names(cn22dom_rel) %in% id_cols]
-
-conta_problemas <- function(x){   
-  c(     
-    "NA"     = sum(is.na(x) & !is.nan(x)),  # NA puro
-    "NaN"    = sum(is.nan(x)),               # NaN     
-    "Inf"    = sum(is.infinite(x) & x > 0),  # +Inf     
-    "NegInf" = sum(is.infinite(x) & x < 0)   # -Inf   
-    ) 
-  }  
-
-problemas_tipo <- t(sapply(cn22dom_rel[vars_rel], conta_problemas))  
-
-problemas_tipo
+cn22dom_vars %>%
+  filter(nome_municipio == municipio_escolhido) %>%
+  slice_sample(n = 10) %>%
+  select(
+    cod_setor,
+    matches("dom01.*tot")
+  ) %>%
+  print(width = Inf)
 ```

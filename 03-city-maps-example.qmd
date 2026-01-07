@@ -1,0 +1,540 @@
+---
+title: "Mapas - São Paulo/SP"
+subtitle: "Indicadores domiciliares por setor censitário"
+author: "Thais Cshunderlick"
+date: "`r format(Sys.Date(), '%d/%m/%Y')`"
+format: 
+  html:
+    toc: true
+engine: knitr
+freeze: auto
+execute:
+  warning: false
+  message: false
+params:
+  cod_mun: "3550308"        # SP capital
+  nome_mun: "São Paulo"
+  ano_ref: 2022
+  fonte: "IBGE - Censo Demográfico 2022"
+---
+
+# Mapas de Indicadores
+
+**Código IBGE do município:** `r params$cod_mun`\
+**Ano de referência:** `r params$ano_ref`\
+**Fonte:** `r params$fonte`
+
+Este documento gera mapas interativos dos indicadores domiciliares do Censo 2022 para o município de **`r params$nome_mun`**. Os dados são visualizados por **setor censitário**, permitindo análises detalhadas intraurbanas.
+
+## 1. Configuração do Ambiente
+
+```{r}
+#| label: setup
+#| warning: false
+#| message: false
+
+library(dplyr)
+library(readr)
+library(sf)
+library(ggplot2)
+library(geobr)
+library(stringr)
+library(viridis)
+library(leaflet)
+library(scales)
+library(here)
+library(DT)
+
+# Definição da estrutura de pastas para organizar os dados 
+pasta_base <- here("data") 
+pasta_out <- sprintf("%s/03_indicators", pasta_base)
+pasta_shapes <- sprintf("%s/04_shapes", pasta_base)
+
+cn22dom_vars <- read_csv(
+  file.path(pasta_out, "cn22dom_vars.csv"),
+  show_col_types = FALSE
+)
+
+# glimpse(cn22dom_vars)
+```
+
+```{r}
+#| label: indicadores
+# Definição do município
+cod_mun  <- "3550308"
+nome_mun <- "São Paulo"
+
+stopifnot(cod_mun %in% cn22dom_vars$cod_municipio)
+
+# Preparar base de indicadores
+indicadores <- cn22dom_vars %>%
+  mutate(
+    cod_setor = as.character(cod_setor),
+    cod_municipio = as.character(cod_municipio)
+  )
+
+cat(
+  "Indicadores carregados (absolutos e relativos): ",
+  nrow(indicadores),
+  " setores\n",
+  sep = ""
+)
+
+# Filtrar para o município
+indicadores_mun <- indicadores %>%
+  filter(cod_municipio == cod_mun) %>%
+  mutate(cod_setor_ibge = cod_setor)
+
+cat(
+  "Setores em ",
+  nome_mun,
+  ": ",
+  nrow(indicadores_mun),
+  "\n\n",
+  sep = ""
+)
+
+# Verificação final
+if (nrow(indicadores_mun) == 0) {
+  stop("Nenhum setor encontrado para ", nome_mun)
+}
+
+cat("Primeiro setor: ", indicadores_mun$cod_setor[1], "\n", sep = "")
+cat("Exemplo de indicador disponível:\n")
+
+vars_cn22 <- names(indicadores_mun)[str_detect(names(indicadores_mun), "^cn22_")]
+print(head(vars_cn22, 1))
+```
+
+## 2. Baixar e Preparar Shapes dos Setores Censitários
+
+```{r}
+#| label: baixar-shapes
+#| cache: true
+#| warning: false
+# Nome do arquivo shape para este município
+shape_file <- file.path(pasta_shapes, paste0("setores_", cod_mun, ".gpkg"))
+
+if (!file.exists(shape_file)) {
+  cat("Baixando shapes dos setores censitários...\n")
+  
+  # URL base dos shapes do IBGE (BC250 - versão mais recente)
+  # Para 2022, usar a base de 2019 que é compatível
+  base_url <- "https://geoftp.ibge.gov.br/cartas_e_mapas/bases_cartograficas_continuas/bc250/versao2023/geopackage/"
+  
+  # Determinar UF a partir do código do município
+  uf_code <- substr(cod_mun, 1, 2)
+  
+  # Mapeamento código UF para sigla
+  uf_siglas <- c(
+    "11" = "RO", "12" = "AC", "13" = "AM", "14" = "RR", "15" = "PA",
+    "16" = "AP", "17" = "TO", "21" = "MA", "22" = "PI", "23" = "CE",
+    "24" = "RN", "25" = "PB", "26" = "PE", "27" = "AL", "28" = "SE",
+    "29" = "BA", "31" = "MG", "32" = "ES", "33" = "RJ", "35" = "SP",
+    "41" = "PR", "42" = "SC", "43" = "RS", "50" = "MS", "51" = "MT",
+    "52" = "GO", "53" = "DF"
+  )
+  
+  uf_sigla <- uf_siglas[uf_code]
+  
+  if (is.na(uf_sigla)) {
+    stop("Código UF inválido: ", uf_code)
+  }
+  
+  # URL alternativa: usar geobr para download simplificado
+  cat("Usando pacote geobr para download dos shapes...\n")
+  
+  # Instalar geobr se necessário
+  if (!requireNamespace("geobr", quietly = TRUE)) {
+    install.packages("geobr")
+  }
+  library(geobr)
+  
+  # Baixar shapes dos setores censitários
+  tryCatch({
+    setores_sf <- read_census_tract(
+      year = 2019,  # Último ano disponível compatível com 2022
+      code_tract = "all",
+      simplified = TRUE
+    )
+    
+    # Filtrar para o município
+    setores_mun <- setores_sf %>%
+      filter(code_muni == as.numeric(cod_mun))
+    
+    # Salvar em arquivo local para cache
+    st_write(setores_mun, shape_file, quiet = TRUE)
+    cat("Shapes salvos em:", shape_file, "\n")
+    
+  }, error = function(e) {
+    cat("Erro ao baixar via geobr:", e$message, "\n")
+    cat("Usando shapes locais se disponíveis...\n")
+  })
+}
+
+# Carregar shapes
+if (file.exists(shape_file)) {
+  setores_sf <- st_read(shape_file, quiet = TRUE)
+} else {
+  # Fallback: criar geometria simplificada a partir dos centroides
+  cat("Criando geometria aproximada a partir de coordenadas...\n")
+  
+  # Se você tiver coordenadas dos setores, carregue aqui
+  # Por enquanto, criamos pontos aleatórios para demonstração
+  set.seed(123)
+  setores_sf <- indicadores_mun %>%
+    mutate(
+      geometry = st_sfc(
+        lapply(1:n(), function(i) {
+          # Coordenadas aproximadas do município
+          # Em produção, use coordenadas reais!
+          lon <- -46.6 + runif(1, -0.2, 0.2)
+          lat <- -23.5 + runif(1, -0.2, 0.2)
+          st_point(c(lon, lat))
+        })
+      )
+    ) %>%
+    st_as_sf()
+}
+
+cat("Shapes carregados:", nrow(setores_sf), "setores\n")
+```
+
+## 3. Juntar Dados e Geometrias
+
+```{r}
+#| label: juntar-dados-shapes
+#| warning: false
+
+# Converter código do setor para formato compatível
+setores_com_dados <- setores_sf %>%
+  mutate(
+    code_tract_char = as.character(code_tract)
+  ) %>%
+  left_join(
+    indicadores_mun,
+    by = c("code_tract_char" = "cod_setor_ibge")
+  )
+
+# Verificar junção
+setores_com_info <- setores_com_dados %>%
+  filter(!is.na(cn22_dom03_cas_tot_2))
+
+cat("Setores com dados e geometria:", nrow(setores_com_info), 
+    "(", round(nrow(setores_com_info)/nrow(indicadores_mun)*100, 1), "%)\n")
+```
+
+## 4. Mapa interativo 1: Proporção de casas x apartamentos
+
+```{r}
+#| label: mapa-casas
+#| warning: false
+
+# Preparar dados para o mapa
+dados_mapa <- setores_com_info %>%
+  mutate(
+    prop_casas = cn22_dom03_cas_tot_2 * 100,
+    prop_aptos = cn22_dom03_apt_tot_2 * 100,
+    densidade = cn22_dom03_6mor_tot_2 * 100
+  )
+
+# Função para criar paleta de cores
+criar_paleta <- function(variavel, cores = "YlOrRd", reversa = FALSE) {
+  colorNumeric(
+    palette = cores,
+    domain = variavel,
+    na.color = "#808080",
+    reverse = reversa
+  )
+}
+
+# Paleta para proporção de casas
+pal_casas <- criar_paleta(dados_mapa$prop_casas, "YlOrRd")
+
+# Criar mapa Leaflet
+mapa_casas <- leaflet(dados_mapa) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(
+    fillColor = ~pal_casas(prop_casas),
+    fillOpacity = 0.7,
+    color = "#444444",
+    weight = 0.5,
+    smoothFactor = 0.5,
+    label = ~paste(
+      "Setor:", code_tract_char,
+      "<br>Casas:", round(prop_casas, 1), "%",
+      "<br>Aptos:", round(prop_aptos, 1), "%",
+      "<br>Densidade (>6 moradores):", round(densidade, 1), "%"
+    ) %>% lapply(htmltools::HTML),
+    highlightOptions = highlightOptions(
+      weight = 2,
+      color = "#666666",
+      bringToFront = TRUE
+    )
+  ) %>%
+  addLegend(
+    pal = pal_casas,
+    values = ~prop_casas,
+    opacity = 0.7,
+    title = "% de Casas",
+    position = "bottomright",
+    labFormat = labelFormat(suffix = "%")
+  ) %>%
+  addControl(
+    paste(nome_mun, "- Proporção de Domicílios tipo Casa"),
+    position = "topright"
+  )
+
+mapa_casas
+```
+
+## 5. Mapa interativo 2: Domicílios improvisados
+
+```{r}
+#| label: mapa-improvisados
+#| warning: false
+
+# Filtrar setores com dados de improvisados
+dados_improvisados <- dados_mapa %>%
+  mutate(
+    prop_improvisados = cn22_dom02_dpio_tot_2 * 100
+  ) %>%
+  filter(!is.na(prop_improvisados) & prop_improvisados > 0)
+
+# Paleta para improvisados (vermelho = mais crítico)
+pal_improvisados <- criar_paleta(dados_improvisados$prop_improvisados, "Reds")
+
+# Criar mapa
+mapa_improvisados <- leaflet(dados_improvisados) %>%
+  addProviderTiles("CartoDB.DarkMatter") %>%
+  addPolygons(
+    fillColor = ~pal_improvisados(prop_improvisados),
+    fillOpacity = 0.8,
+    color = "#222222",
+    weight = 0.3,
+    label = ~paste(
+      "Setor:", code_tract_char,
+      "<br>Domic. improvisados:", round(prop_improvisados, 2), "%",
+      "<br>Total domicílios:", cn22_dom01_ocu_tot_1
+    ) %>% lapply(htmltools::HTML)
+  ) %>%
+  addLegend(
+    pal = pal_improvisados,
+    values = ~prop_improvisados,
+    opacity = 0.8,
+    title = "% Improvisados",
+    position = "bottomright",
+    labFormat = labelFormat(suffix = "%", digits = 2)
+  ) %>%
+  addControl(
+    paste(nome_mun, "- Domicílios Improvisados"),
+    position = "topright"
+  )
+
+mapa_improvisados
+```
+
+## 6. Mapas Estáticos para Exportação
+
+```{r}
+#| label: mapas-estaticos
+#| warning: false
+#| fig-width: 10
+#| fig-height: 8
+
+# Criar mapas estáticos com ggplot2
+if (all(st_geometry_type(dados_mapa) %in% c("POLYGON", "MULTIPOLYGON"))) {
+  # Mapa 1: Proporção de casas
+  mapa_estatico1 <- ggplot(dados_mapa) +
+    geom_sf(aes(fill = prop_casas), color = NA, size = 0.1) +
+    scale_fill_viridis(
+      name = "% Casas",
+      option = "plasma",
+      na.value = "gray90",
+      labels = scales::percent_format(scale = 1)
+    ) +
+    labs(
+      title = paste("Proporção de Domicílios tipo Casa -", nome_mun),
+      subtitle = "Por setor censitário - Censo 2022",
+      caption = "Fonte: IBGE - Censo Demográfico 2022"
+    ) +
+    theme_void() +
+    theme(
+      plot.title = element_text(hjust = 0.5, face = "bold", size = 14),
+      legend.position = "bottom",
+      legend.key.width = unit(2, "cm")
+    )
+  
+  print(mapa_estatico1)
+  
+  # Mapa 2: Domicílios improvisados
+  if (nrow(dados_improvisados) > 0) {
+    mapa_estatico2 <- ggplot(dados_improvisados) +
+      geom_sf(aes(fill = prop_improvisados), color = NA, size = 0.1) +
+      scale_fill_gradientn(
+        name = "% Improvisados",
+        colors = c("lightyellow", "orange", "red", "darkred"),
+        na.value = "gray90",
+        limits = c(0, max(dados_improvisados$prop_improvisados, na.rm = TRUE)),
+        labels = scales::percent_format(scale = 1, accuracy = 0.1)
+      ) +
+      labs(
+        title = paste("Domicílios Improvisados -", nome_mun),
+        subtitle = "Por setor censitário - Censo 2022",
+        caption = "Fonte: IBGE - Censo Demográfico 2022"
+      ) +
+      theme_void() +
+      theme(
+        plot.title = element_text(hjust = 0.5, face = "bold", size = 14),
+        legend.position = "bottom",
+        legend.key.width = unit(2, "cm")
+      )
+    
+    print(mapa_estatico2)
+  }
+}
+```
+
+## 7. Análise por Bairro/Distrito
+
+```{r}
+#| label: analise-bairro
+#| warning: false
+
+# Agregar indicadores por bairro (se disponível)
+if ("nome_bairro" %in% names(indicadores_mun)) {
+  bairros_agg <- indicadores_mun %>%
+    group_by(cod_bairro, nome_bairro) %>%
+    summarise(
+      n_setores = n(),
+      media_casas = mean(cn22_dom03_cas_tot_2 * 100, na.rm = TRUE),
+      media_aptos = mean(cn22_dom03_apt_tot_2 * 100, na.rm = TRUE),
+      media_improvisados = mean(cn22_dom02_dpio_tot_2 * 100, na.rm = TRUE),
+      media_densidade = mean(cn22_dom03_6mor_tot_2 * 100, na.rm = TRUE),
+      .groups = 'drop'
+    ) %>%
+    arrange(desc(media_improvisados))
+  
+  # Gráfico de ranking
+  top_bairros <- bairros_agg %>%
+    filter(!is.na(nome_bairro) & nome_bairro != "") %>%
+    arrange(desc(media_improvisados)) %>%
+    head(15)
+  
+  if (nrow(top_bairros) > 0) {
+    ggplot(top_bairros, 
+           aes(x = reorder(nome_bairro, media_improvisados), 
+               y = media_improvisados)) +
+      geom_col(fill = "steelblue", alpha = 0.8) +
+      geom_text(aes(label = round(media_improvisados, 2)), 
+                hjust = -0.2, size = 3) +
+      coord_flip() +
+      labs(
+        title = paste("Top 15 Bairros com Mais Domicílios Improvisados -", nome_mun),
+        x = "Bairro",
+        y = "% de Domicílios Improvisados"
+      ) +
+      theme_minimal() +
+      theme(
+        plot.title = element_text(face = "bold"),
+        axis.text.y = element_text(size = 9)
+      )
+  }
+}
+```
+
+## 8. Tabela Interativa de Indicadores
+
+```{r}
+#| label: tabela-interativa
+#| warning: false
+
+# Criar tabela resumo para os primeiros 50 setores
+tabela_resumo <- setores_com_info %>%
+  st_drop_geometry() %>%
+  select(
+    Setor = code_tract_char,
+    Bairro = nome_bairro,
+    `Casas (%)` = cn22_dom03_cas_tot_2,
+    `Aptos (%)` = cn22_dom03_apt_tot_2,
+    `Improvisados (%)` = cn22_dom02_dpio_tot_2,
+    `>6 Moradores (%)` = cn22_dom03_6mor_tot_2,
+    `Total Domicílios` = cn22_dom01_ocu_tot_1
+  ) %>%
+  mutate(
+    across(where(is.numeric) & contains("%"), ~ round(.x * 100, 2)),
+    across(where(is.numeric) & !contains("%"), ~ round(.x, 0))
+  ) %>%
+  head(50)  # Limitar para performance
+
+# Tabela interativa com DT
+datatable(
+  tabela_resumo,
+  options = list(
+    pageLength = 10,
+    dom = 'Bfrtip',
+    buttons = c('copy', 'csv', 'excel'),
+    scrollX = TRUE
+  ),
+  caption = paste("Indicadores Domiciliares - Primeiros 50 Setores -", nome_mun),
+  rownames = FALSE,
+  filter = 'top'
+) %>%
+  formatStyle(
+    'Improvisados (%)',
+    background = styleColorBar(tabela_resumo$`Improvisados (%)`, 'lightcoral'),
+    backgroundSize = '100% 90%',
+    backgroundRepeat = 'no-repeat'
+  ) %>%
+  formatStyle(
+    'Casas (%)',
+    background = styleColorBar(tabela_resumo$`Casas (%)`, 'lightblue'),
+    backgroundSize = '100% 90%'
+  )
+```
+
+## 9. Resumo Estatístico
+
+```{r}
+#| label: resumo-estatistico
+#| warning: false
+
+# Calcular estatísticas descritivas
+resumo_estatistico <- indicadores_mun %>%
+  summarise(
+    `Total Setores` = n(),
+    `Média Casas (%)` = mean(cn22_dom03_cas_tot_2 * 100, na.rm = TRUE),
+    `Média Aptos (%)` = mean(cn22_dom03_apt_tot_2 * 100, na.rm = TRUE),
+    `Média Improvisados (%)` = mean(cn22_dom02_dpio_tot_2 * 100, na.rm = TRUE),
+    `Média >6 Moradores (%)` = mean(cn22_dom03_6mor_tot_2 * 100, na.rm = TRUE),
+    `Total Domicílios` = sum(cn22_dom01_ocu_tot_1, na.rm = TRUE),
+    `Total Moradores` = sum(cn22_dom01_ocu_tot_mor_1, na.rm = TRUE)
+  ) %>%
+  mutate(across(where(is.numeric), ~ round(.x, 2)))
+
+cat("RESUMO ESTATÍSTICO -", nome_mun, "\n")
+cat("================================\n")
+print(resumo_estatistico)
+```
+
+## 10. Como Usar para Outros Municípios
+
+Para gerar mapas para outro município, renderize com parâmetros diferentes:
+
+``` bash
+# Rio de Janeiro
+quarto render 03-mapa-cidades.qmd -P cod_mun:3304557 -P nome_mun:"Rio de Janeiro"
+
+# Belo Horizonte
+quarto render 03-mapa-cidades.qmd -P cod_mun:3106200 -P nome_mun:"Belo Horizonte"
+
+# Curitiba
+quarto render 03-mapa-cidades.qmd -P cod_mun:4106902 -P nome_mun:"Curitiba"
+```
+
+**Próximos passos:** 1. Execute `01-import-data.qmd` para baixar os dados 2. Execute `02-gerar-indicadores.qmd` para calcular indicadores\
+3. Execute este documento para gerar os mapas 4. Para publicar: `quarto render` e suba a pasta `docs/` para GitHub Pages
+
+------------------------------------------------------------------------
+
+*Documento gerado em `r format(Sys.time(), '%d/%m/%Y %H:%M')`*
