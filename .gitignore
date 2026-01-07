@@ -2,14 +2,27 @@
 data/logs/
 data/raw/
 data/processed/
+data/shapes/
 /data/
-*.csv
-*.parquet
+
+# Ignore dados pesados, mas permita outputs finais se quiser
+data/**/*.parquet
+data/**/*.csv
+
+# Quarto / knitr
+*_cache/
+*_files/
+_freeze/
+.quarto/
 
 # R
-.Rproj.user
+.Rproj.user/
 .Rhistory
 .RData
 .Ruserdata
-/.quarto/
-**/*.quarto_ipynb
+
+renv/library/
+renv/staging/
+
+.DS_Store
+Thumbs.db
