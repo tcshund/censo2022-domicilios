@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Thais Cshunderlick">
+
+<title>Indicators – GeoReDUS - Domicílios</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-e31584831b205ffbb2d98406f31c2a5b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">GeoReDUS - Domicílios</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Sobre</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./01-import-data.html"> 
+<span class="menu-text">Dados</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./02-indicators.html" aria-current="page"> 
+<span class="menu-text">Indicators</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#sobre" id="toc-sobre" class="nav-link active" data-scroll-target="#sobre">Sobre</a></li>
+  <li><a href="#bibliotecas" id="toc-bibliotecas" class="nav-link" data-scroll-target="#bibliotecas">Bibliotecas</a></li>
+  <li><a href="#configuração-do-ambiente" id="toc-configuração-do-ambiente" class="nav-link" data-scroll-target="#configuração-do-ambiente">1. Configuração do ambiente</a></li>
+  <li><a href="#nomenclatura-adotada" id="toc-nomenclatura-adotada" class="nav-link" data-scroll-target="#nomenclatura-adotada"><strong>2. Nomenclatura adotada</strong></a></li>
+  <li><a href="#leitura-dos-parquets" id="toc-leitura-dos-parquets" class="nav-link" data-scroll-target="#leitura-dos-parquets">3. Leitura dos parquets</a></li>
+  <li><a href="#criação-e-transformação-das-variáveis" id="toc-criação-e-transformação-das-variáveis" class="nav-link" data-scroll-target="#criação-e-transformação-das-variáveis">4. Criação e transformação das variáveis</a></li>
+  <li><a href="#exportando-os-indicadores-de-domicílio" id="toc-exportando-os-indicadores-de-domicílio" class="nav-link" data-scroll-target="#exportando-os-indicadores-de-domicílio">5. Exportando os indicadores de Domicílio</a></li>
+  <li><a href="#verificação-dos-indicadores-exportados" id="toc-verificação-dos-indicadores-exportados" class="nav-link" data-scroll-target="#verificação-dos-indicadores-exportados">6. Verificação dos indicadores exportados</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Indicators</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Thais Cshunderlick </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="sobre" class="level3">
+<h3 class="anchored" data-anchor-id="sobre">Sobre</h3>
+<p>Este script constrói um conjunto de indicadores relacionados ao <strong>tema Domicílios</strong>, a partir dos dados do <strong>Censo Demográfico do <a href="https://www.ibge.gov.br/">IBGE</a> de 2022</strong>, para exibição na plataforma <a href="https://www.redus.org.br/georedus"><strong>GeoReDUS</strong></a>. Os indicadores são calculados para <strong>todos os setores censitários do Brasil</strong>.</p>
+<p>Os indicadores produzidos abrangem os seguintes eixos:</p>
+<ul>
+<li><p><strong>Ocupação de Domicílios</strong><br>
+Dados de domicílios particulares e coletivos ocupados e seus moradores.</p></li>
+<li><p><strong>Posse de Domicílios</strong><br>
+Dentre os domicílios ocupados, indicadores que abrangem os particulares permanentes e improvisados e seus moradores com recortes de sexo.</p></li>
+<li><p><strong>Dados de Domicílios Particulares</strong><br>
+Dentre os domicílios particulares, recortes de tipo de residência (casas, apartamentos) e de seus moradores, além de domicílios com mais de 6 moradores.</p></li>
+</ul>
+<p>Ao final, os resultados são organizados e exportados em <strong>arquivos CSV</strong>, que servem como base para análises e visualizações posteriores. Os indicadores seguem uma <strong>nomenclatura padronizada</strong>, que explicita o tema, o subtema, o recorte, a variante e o tipo de dado, permitindo a identificação direta do conteúdo de cada variável.</p>
+</section>
+<section id="bibliotecas" class="level3">
+<h3 class="anchored" data-anchor-id="bibliotecas">Bibliotecas</h3>
+<p><em>Load Packages</em></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(arrow)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fs)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="configuração-do-ambiente" class="level3">
+<h3 class="anchored" data-anchor-id="configuração-do-ambiente">1. Configuração do ambiente</h3>
+<p><em>Set the Environment</em></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Definição da estrutura de pastas para organizar os dados </span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>pasta_base <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"data"</span>) </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>pasta_pqs <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"%s/02_processed"</span>, pasta_base)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Criação da pasta para salvar os csvs com os indicadores</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>pasta_out <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"%s/03_indicators"</span>, pasta_base)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(pasta_out, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="nomenclatura-adotada" class="level3">
+<h3 class="anchored" data-anchor-id="nomenclatura-adotada"><strong>2. Nomenclatura adotada</strong></h3>
+<table class="caption-top table">
+<caption>Indicadores de Domicílios</caption>
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Tema</strong></th>
+<th><strong>Subtema</strong></th>
+<th><strong>ST</strong></th>
+<th><strong>Descrição</strong></th>
+<th><strong>Indicador/Variável</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dom01</td>
+<td>Ocupação</td>
+<td>ocu</td>
+<td>Domicilios Ocupados</td>
+<td>dom01_ocu</td>
+</tr>
+<tr class="even">
+<td>dom02</td>
+<td>Posse</td>
+<td>dppo</td>
+<td>Domicílios Particulares Permanentes Ocupados</td>
+<td>dom02_dppo</td>
+</tr>
+<tr class="odd">
+<td>dom02</td>
+<td>Posse</td>
+<td>dpio</td>
+<td>Domicílios Particulares Improvisados Ocupados</td>
+<td>dom02_dpio</td>
+</tr>
+<tr class="even">
+<td>dom02</td>
+<td>Posse</td>
+<td>dccm</td>
+<td>Domicílios Coletivos Com Morador</td>
+<td>dom02_dccm</td>
+</tr>
+<tr class="odd">
+<td>dom03</td>
+<td>Particulares</td>
+<td>cas</td>
+<td>Tipo de DPPO: Casas</td>
+<td>dom03_cas</td>
+</tr>
+<tr class="even">
+<td>dom03</td>
+<td>Particulares</td>
+<td>apt</td>
+<td>Tipo de DPPO: Apartamentos</td>
+<td>dom03_apt</td>
+</tr>
+<tr class="odd">
+<td>dom03</td>
+<td>Particulares</td>
+<td>6mor</td>
+<td>DPPO com mais de 6 moradores</td>
+<td>dom03_6mor</td>
+</tr>
+</tbody>
+</table>
+<table class="caption-top table">
+<caption>Recortes</caption>
+<thead>
+<tr class="header">
+<th>Sigla</th>
+<th>Recorte</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>tot</td>
+<td>Total</td>
+</tr>
+<tr class="even">
+<td>cor</td>
+<td>Cor ou Raça</td>
+</tr>
+<tr class="odd">
+<td>sex</td>
+<td>Sexo</td>
+</tr>
+<tr class="even">
+<td>corsex</td>
+<td>Cor + Sexo</td>
+</tr>
+</tbody>
+</table>
+<table class="caption-top table">
+<caption>Variantes</caption>
+<thead>
+<tr class="header">
+<th>Sigla</th>
+<th>Variante</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>mor</td>
+<td>Moradores</td>
+</tr>
+<tr class="even">
+<td>f</td>
+<td>Sexo Feminino</td>
+</tr>
+<tr class="odd">
+<td>m</td>
+<td>Sexo Masculino</td>
+</tr>
+<tr class="even">
+<td>ama</td>
+<td>Pessoas Amarelas</td>
+</tr>
+<tr class="odd">
+<td>bra</td>
+<td>Pessoas Brancas</td>
+</tr>
+<tr class="even">
+<td>ind</td>
+<td>Pessoas Indígenas</td>
+</tr>
+<tr class="odd">
+<td>neg</td>
+<td>Pessoas Negras (Pretas + Pardas)</td>
+</tr>
+</tbody>
+</table>
+<table class="caption-top table">
+<caption>Tipo de dado</caption>
+<thead>
+<tr class="header">
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>Dado bruto, usa diretamente a variável do IBGE (ex. V00001)</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>Dado composto, faz soma ou subtração de variáveis do IBGE</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>Porcentagem (%), divide variáveis do IBGE</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="leitura-dos-parquets" class="level3">
+<h3 class="anchored" data-anchor-id="leitura-dos-parquets">3. Leitura dos parquets</h3>
+<p>O fluxo deste script parte sempre dos arquivos em formato parquet, que funcionam como a fonte de dados original e nunca são modificados diretamente.</p>
+<p>A leitura dos parquets carrega os dados em memória como <em>tibbles</em>, sobre os quais aplicamos transformações com <code>mutate()</code>, <code>filter()</code>, <code>group_by()</code>, <code>summarise()</code> e outras funções do <em>dplyr</em>. Essas operações criam colunas temporárias, fazem cálculos e reorganizam informações, mas tudo permanece apenas no objeto resultante em memória.</p>
+<p>Ao longo do fluxo, esses objetos transformados podem ser encadeados ou substituídos, mas não são gravados automaticamente em nenhum arquivo. Apenas na etapa final do script os resultados são efetivamentente salvos e exportados como CSVs.</p>
+</section>
+<section id="criação-e-transformação-das-variáveis" class="level3">
+<h3 class="anchored" data-anchor-id="criação-e-transformação-das-variáveis">4. Criação e transformação das variáveis</h3>
+<p>Com os dados já carregados, o script aplica operações do <em>dplyr</em>.<br>
+Cada linha indica uma nova <strong>coluna derivada.</strong></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>basico <span class="ot">&lt;-</span> <span class="fu">read_parquet</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sprintf</span>(<span class="st">"%s/01_basico.parquet"</span>, pasta_pqs))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>domicilios <span class="ot">&lt;-</span> <span class="fu">read_parquet</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sprintf</span>(<span class="st">"%s/02_domicilio.parquet"</span>, pasta_pqs)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">replace</span>(<span class="fu">is.na</span>(.), <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      <span class="co"># # # Indicadores Absolutos</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>      <span class="co"># dom01 - Ocupação </span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      <span class="co"># total de domicílios (dppo+dpio+dccm) </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom01_ocu_tot_1 =</span> V00001 <span class="sc">+</span> V00002 <span class="sc">+</span> V00003, </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>      <span class="co"># total de moradores (em dppo+dpio+dccm)</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom01_ocu_tot_mor_1 =</span> V00005 <span class="sc">+</span> V00006 <span class="sc">+</span> V00007,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>      <span class="co"># dom02 - Posse (apenas ocupados)</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>      <span class="co"># domicílios particulares </span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom02_dppo_tot_0 =</span> V00001, </span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>      <span class="co"># moradores em dom particulares (V00011 + V00014)</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom02_dppo_tot_mor_0 =</span> V00005, </span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom02_dppo_sex_m_0 =</span> V00011,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom02_dppo_sex_f_0 =</span> V00014,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom02_dpio_tot_0 =</span> V00002, <span class="co"># improvisados</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>      <span class="co"># dom03 - Domicílios Particulares</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Casas</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_cas_tot_1 =</span> V00047 <span class="sc">+</span> V00048, </span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_cas_tot_mor_1 =</span> V00084 <span class="sc">+</span> V00085,</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_cas_sex_m_1 =</span> V00502 <span class="sc">+</span> V00503,</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_cas_sex_f_1 =</span> V00505 <span class="sc">+</span> V00506,</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Apartamentos</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_apt_tot_0 =</span> V00049,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_apt_tot_mor_0 =</span> V00086,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_apt_sex_m_0 =</span> V00504,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_apt_sex_f_0 =</span> V00507,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Domicílios com mais de 6 moradores</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_6mor_tot_1 =</span>  V00022 <span class="sc">+</span> V00023 <span class="sc">+</span> V00024 <span class="sc">+</span> V00025 <span class="sc">+</span> V00026</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># # # Indicadores Relativos</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># dom02 - Posse, em relação ao total de ocupados</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom02_dppo_tot_2 =</span> dom02_dppo_tot_0 <span class="sc">/</span> dom01_ocu_tot_1,</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom02_dppo_tot_mor_2 =</span> dom02_dppo_tot_mor_0 <span class="sc">/</span> dom01_ocu_tot_mor_1,</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom02_dppo_sex_f_2 =</span> dom02_dppo_sex_f_0 <span class="sc">/</span> dom02_dppo_tot_mor_0,</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom02_dppo_sex_m_2 =</span> dom02_dppo_sex_m_0 <span class="sc">/</span> dom02_dppo_tot_mor_0,  </span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom02_dpio_tot_2 =</span> dom02_dpio_tot_0 <span class="sc">/</span> dom01_ocu_tot_1,</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># dom03 - Domicílios Particulares </span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Casas</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_cas_tot_2 =</span> dom03_cas_tot_1 <span class="sc">/</span> dom02_dppo_tot_0,</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_cas_tot_mor_2 =</span> dom03_cas_tot_mor_1 <span class="sc">/</span> dom02_dppo_tot_mor_0,</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_cas_sex_m_2 =</span> dom03_cas_sex_m_1 <span class="sc">/</span> dom02_dppo_sex_m_0,</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_cas_sex_f_2 =</span> dom03_cas_sex_f_1 <span class="sc">/</span> dom02_dppo_sex_f_0,</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Apartamentos</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_apt_tot_2 =</span> dom03_apt_tot_0 <span class="sc">/</span> dom02_dppo_tot_0,</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_apt_tot_mor_2 =</span> dom03_apt_tot_mor_0 <span class="sc">/</span> dom02_dppo_tot_mor_0,</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_apt_sex_m_2 =</span> dom03_apt_sex_m_0 <span class="sc">/</span> dom02_dppo_sex_m_0,  </span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_apt_sex_f_2 =</span> dom03_apt_sex_f_0 <span class="sc">/</span> dom02_dppo_sex_f_0,</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Domicílios com mais de 6 moradores</span></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_6mor_tot_2 =</span> dom03_6mor_tot_1 <span class="sc">/</span> dom02_dppo_tot_0    </span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">matches</span>(<span class="st">"^(cd|dom)"</span>))<span class="sc">%&gt;%</span></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Inclui "cn22" antes de cada um dos indicadores</span></span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> <span class="fu">paste0</span>(<span class="st">"cn22_"</span>, .x),</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">starts_with</span>(<span class="st">"dom"</span>)</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="exportando-os-indicadores-de-domicílio" class="level3">
+<h3 class="anchored" data-anchor-id="exportando-os-indicadores-de-domicílio">5. Exportando os indicadores de Domicílio</h3>
+<p>As colunas criadas são unidas em novos csvs:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cn22dom <span class="ot">&lt;-</span> basico <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(domicilios, <span class="at">by=</span><span class="st">"cd_setor"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_setor =</span> cd_setor,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_bairro =</span> cd_bairro,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_distrito =</span> cd_dist,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_subdistrito =</span> cd_subdist,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_municipio =</span> cd_mun,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">situacao_setor =</span> situacao,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_uf =</span> cd_uf,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_bairro =</span> nm_bairro,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_distrito =</span> nm_dist,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_municipio =</span> nm_mun,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_subdistrito =</span> nm_subdist,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_uf =</span> nm_uf</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>id_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cod_setor"</span>,<span class="st">"cod_bairro"</span>,<span class="st">"cod_distrito"</span>,<span class="st">"cod_subdistrito"</span>,<span class="st">"cod_municipio"</span>,</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"situacao_setor"</span>,<span class="st">"cod_uf"</span>,</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"nome_bairro"</span>,<span class="st">"nome_distrito"</span>,<span class="st">"nome_municipio"</span>,<span class="st">"nome_subdistrito"</span>,<span class="st">"nome_uf"</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Exportar as variáveis absolutas (brutas ou compostas)</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>cn22dom_abs <span class="ot">&lt;-</span> cn22dom <span class="sc">%&gt;%</span>  </span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">all_of</span>(id_cols),</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ends_with</span>(<span class="st">"_0"</span>),</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ends_with</span>(<span class="st">"_1"</span>)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>cn22dom_abs <span class="sc">%&gt;%</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_csv</span>(<span class="fu">sprintf</span>(<span class="st">"%s/cn22dom_abs.csv"</span>, pasta_out))</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Exportar as variáveis relativas (porcentagens)</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>cn22dom_rel <span class="ot">=</span> cn22dom <span class="sc">%&gt;%</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">all_of</span>(id_cols),</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ends_with</span>(<span class="st">"_2"</span>)</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>cn22dom_rel <span class="sc">%&gt;%</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_csv</span>(<span class="fu">sprintf</span>(<span class="st">"%s/cn22dom_rel.csv"</span>, pasta_out))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="verificação-dos-indicadores-exportados" class="level3">
+<h3 class="anchored" data-anchor-id="verificação-dos-indicadores-exportados">6. Verificação dos indicadores exportados</h3>
+<section id="variáveis-absolutas" class="level4">
+<h4 class="anchored" data-anchor-id="variáveis-absolutas">6.1 Variáveis Absolutas</h4>
+<p>Olhar geral no csv:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(cn22dom_abs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 468,099
+Columns: 28
+$ cod_setor                 &lt;chr&gt; "110001505000002", "110001505000003", "11000…
+$ cod_bairro                &lt;chr&gt; "1100015006", "1100015006", "1100015005", "1…
+$ cod_distrito              &lt;chr&gt; "110001505", "110001505", "110001505", "1100…
+$ cod_subdistrito           &lt;chr&gt; "11000150500", "11000150500", "11000150500",…
+$ cod_municipio             &lt;chr&gt; "1100015", "1100015", "1100015", "1100015", …
+$ situacao_setor            &lt;chr&gt; "Urbana", "Urbana", "Urbana", "Urbana", "Urb…
+$ cod_uf                    &lt;chr&gt; "11", "11", "11", "11", "11", "11", "11", "1…
+$ nome_bairro               &lt;chr&gt; "Redondo", "Redondo", "Princesa Isabel", "Pr…
+$ nome_distrito             &lt;chr&gt; "Alta Floresta D'Oeste", "Alta Floresta D'Oe…
+$ nome_municipio            &lt;chr&gt; "Alta Floresta D'Oeste", "Alta Floresta D'Oe…
+$ nome_subdistrito          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ nome_uf                   &lt;chr&gt; "Rondônia", "Rondônia", "Rondônia", "Rondôni…
+$ cn22_dom02_dppo_tot_0     &lt;dbl&gt; 336, 208, 85, 281, 291, 234, 329, 291, 100, …
+$ cn22_dom02_dppo_tot_mor_0 &lt;dbl&gt; 928, 556, 222, 783, 748, 631, 884, 762, 267,…
+$ cn22_dom02_dppo_sex_m_0   &lt;dbl&gt; 428, 270, 108, 407, 373, 296, 403, 361, 141,…
+$ cn22_dom02_dppo_sex_f_0   &lt;dbl&gt; 500, 286, 114, 376, 375, 335, 481, 401, 126,…
+$ cn22_dom02_dpio_tot_0     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+$ cn22_dom03_apt_tot_0      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0,…
+$ cn22_dom03_apt_tot_mor_0  &lt;dbl&gt; 0, 0, 0, 3, 0, 0, 0, 0, 0, 3, 7, 0, 0, 0, 0,…
+$ cn22_dom03_apt_sex_m_0    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+$ cn22_dom03_apt_sex_f_0    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0,…
+$ cn22_dom01_ocu_tot_1      &lt;dbl&gt; 336, 208, 85, 281, 291, 234, 329, 291, 100, …
+$ cn22_dom01_ocu_tot_mor_1  &lt;dbl&gt; 928, 556, 222, 783, 748, 631, 884, 762, 267,…
+$ cn22_dom03_cas_tot_1      &lt;dbl&gt; 335, 208, 85, 280, 291, 234, 328, 291, 100, …
+$ cn22_dom03_cas_tot_mor_1  &lt;dbl&gt; 926, 556, 222, 780, 748, 631, 882, 762, 267,…
+$ cn22_dom03_cas_sex_m_1    &lt;dbl&gt; 427, 270, 108, 405, 373, 296, 402, 361, 141,…
+$ cn22_dom03_cas_sex_f_1    &lt;dbl&gt; 499, 286, 114, 375, 375, 335, 480, 401, 126,…
+$ cn22_dom03_6mor_tot_1     &lt;dbl&gt; 8, 3, 0, 15, 0, 0, 0, 4, 0, 0, 5, 3, 3, 0, 4…</code></pre>
+</div>
+</div>
+<p>Presença das 12 colunas de identificação do arquivo básico:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>id_presentes_abs <span class="ot">&lt;-</span> <span class="fu">sum</span>(id_cols <span class="sc">%in%</span> <span class="fu">names</span>(cn22dom_abs)) </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"- Absolutos:"</span>, id_presentes_abs, <span class="st">"/"</span>, <span class="fu">length</span>(id_cols), <span class="st">"IDs OK</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>- Absolutos: 12 / 12 IDs OK</code></pre>
+</div>
+</div>
+<p>Integridade dos dados numéricos:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>- Dados absolutos:  OK </code></pre>
+</div>
+</div>
+<p>Verificar dados aleatórios das variáveis absolutas de um município:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># substitua pelo municipio que desejar </span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>municipio_escolhido <span class="ot">&lt;-</span> <span class="st">"Goiânia"</span>   </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  cn22dom_abs <span class="sc">%&gt;%</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(nome_municipio <span class="sc">==</span> municipio_escolhido) <span class="sc">%&gt;%</span>     </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span>     </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># substitua "dom01" pelo indicador que deseja verificar     </span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># substitua "tot" pelo recorte que deseja verificar     </span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(cod_setor, <span class="fu">matches</span>(<span class="st">"dom01.*tot"</span>)),    </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="cn">Inf</span> </span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 3
+   cod_setor       cn22_dom01_ocu_tot_1 cn22_dom01_ocu_tot_mor_1
+   &lt;chr&gt;                          &lt;dbl&gt;                    &lt;dbl&gt;
+ 1 520870705020016                  167                      333
+ 2 520870705520036                   45                      134
+ 3 520870705220006                  324                      730
+ 4 520870705630034                  183                      623
+ 5 520870705060009                  108                      265
+ 6 520870705010012                  202                      403
+ 7 520870705330074                  245                      685
+ 8 520870705120016                  259                      648
+ 9 520870705410003                  219                      586
+10 520870705450001                  332                      946</code></pre>
+</div>
+</div>
+</section>
+<section id="variáveis-relativas" class="level4">
+<h4 class="anchored" data-anchor-id="variáveis-relativas">6.1 Variáveis Relativas</h4>
+<p>Olhar geral no csv:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(cn22dom_rel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 468,099
+Columns: 26
+$ cod_setor                 &lt;chr&gt; "110001505000002", "110001505000003", "11000…
+$ cod_bairro                &lt;chr&gt; "1100015006", "1100015006", "1100015005", "1…
+$ cod_distrito              &lt;chr&gt; "110001505", "110001505", "110001505", "1100…
+$ cod_subdistrito           &lt;chr&gt; "11000150500", "11000150500", "11000150500",…
+$ cod_municipio             &lt;chr&gt; "1100015", "1100015", "1100015", "1100015", …
+$ situacao_setor            &lt;chr&gt; "Urbana", "Urbana", "Urbana", "Urbana", "Urb…
+$ cod_uf                    &lt;chr&gt; "11", "11", "11", "11", "11", "11", "11", "1…
+$ nome_bairro               &lt;chr&gt; "Redondo", "Redondo", "Princesa Isabel", "Pr…
+$ nome_distrito             &lt;chr&gt; "Alta Floresta D'Oeste", "Alta Floresta D'Oe…
+$ nome_municipio            &lt;chr&gt; "Alta Floresta D'Oeste", "Alta Floresta D'Oe…
+$ nome_subdistrito          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ nome_uf                   &lt;chr&gt; "Rondônia", "Rondônia", "Rondônia", "Rondôni…
+$ cn22_dom02_dppo_tot_2     &lt;dbl&gt; 1.000000, 1.000000, 1.000000, 1.000000, 1.00…
+$ cn22_dom02_dppo_tot_mor_2 &lt;dbl&gt; 1.0000000, 1.0000000, 1.0000000, 1.0000000, …
+$ cn22_dom02_dppo_sex_f_2   &lt;dbl&gt; 0.5387931, 0.5143885, 0.5135135, 0.4802043, …
+$ cn22_dom02_dppo_sex_m_2   &lt;dbl&gt; 0.4612069, 0.4856115, 0.4864865, 0.5197957, …
+$ cn22_dom02_dpio_tot_2     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+$ cn22_dom03_cas_tot_2      &lt;dbl&gt; 0.9970238, 1.0000000, 1.0000000, 0.9964413, …
+$ cn22_dom03_cas_tot_mor_2  &lt;dbl&gt; 0.9978448, 1.0000000, 1.0000000, 0.9961686, …
+$ cn22_dom03_cas_sex_m_2    &lt;dbl&gt; 0.9976636, 1.0000000, 1.0000000, 0.9950860, …
+$ cn22_dom03_cas_sex_f_2    &lt;dbl&gt; 0.9980000, 1.0000000, 1.0000000, 0.9973404, …
+$ cn22_dom03_apt_tot_2      &lt;dbl&gt; 0.00000000, 0.00000000, 0.00000000, 0.000000…
+$ cn22_dom03_apt_tot_mor_2  &lt;dbl&gt; 0.000000000, 0.000000000, 0.000000000, 0.003…
+$ cn22_dom03_apt_sex_m_2    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+$ cn22_dom03_apt_sex_f_2    &lt;dbl&gt; 0.00000000, 0.00000000, 0.00000000, 0.000000…
+$ cn22_dom03_6mor_tot_2     &lt;dbl&gt; 0.02380952, 0.01442308, 0.00000000, 0.053380…</code></pre>
+</div>
+</div>
+<p>Presença das 12 colunas de identificação do arquivo básico:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>- Relativos:  12 / 12 IDs OK</code></pre>
+</div>
+</div>
+<p>Integridade dos dados numéricos:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>vars_rel <span class="ot">&lt;-</span> <span class="fu">names</span>(cn22dom_rel)[<span class="sc">!</span><span class="fu">names</span>(cn22dom_rel) <span class="sc">%in%</span> id_cols]</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>conta_problemas <span class="ot">&lt;-</span> <span class="cf">function</span>(x){   </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(     </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NA"</span>     <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(x) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.nan</span>(x)),  <span class="co"># NA puro</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NaN"</span>    <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">is.nan</span>(x)),               <span class="co"># NaN     </span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Inf"</span>    <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">is.infinite</span>(x) <span class="sc">&amp;</span> x <span class="sc">&gt;</span> <span class="dv">0</span>),  <span class="co"># +Inf     </span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NegInf"</span> <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">is.infinite</span>(x) <span class="sc">&amp;</span> x <span class="sc">&lt;</span> <span class="dv">0</span>)   <span class="co"># -Inf   </span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    ) </span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  }  </span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>problemas_tipo <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">sapply</span>(cn22dom_rel[vars_rel], conta_problemas))  </span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>problemas_tipo</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                          NA   NaN Inf NegInf
+cn22_dom02_dppo_tot_2      0 18011   0      0
+cn22_dom02_dppo_tot_mor_2  0 18011   0      0
+cn22_dom02_dppo_sex_f_2    0 18011   0      0
+cn22_dom02_dppo_sex_m_2    0 18011   0      0
+cn22_dom02_dpio_tot_2      0 18011   0      0
+cn22_dom03_cas_tot_2       0 18011   0      0
+cn22_dom03_cas_tot_mor_2   0 18011   0      0
+cn22_dom03_cas_sex_m_2     0 18019   0      0
+cn22_dom03_cas_sex_f_2     0 18067   0      0
+cn22_dom03_apt_tot_2       0 18011   0      0
+cn22_dom03_apt_tot_mor_2   0 18011   0      0
+cn22_dom03_apt_sex_m_2     0 18019   0      0
+cn22_dom03_apt_sex_f_2     0 18067   0      0
+cn22_dom03_6mor_tot_2      0 18011   0      0</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

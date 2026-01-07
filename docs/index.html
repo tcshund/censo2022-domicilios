@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>censo2022-domicilios – Análise do Censo 2022 - Domicílios</title>
+<title>Dados de Domicílios – GeoReDUS - Domicílios</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -83,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
     </a>
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Análise do Censo 2022 - Domicílios</span>
+    <span class="navbar-title">GeoReDUS - Domicílios</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -94,11 +94,15 @@ ul.task-list li input[type="checkbox"] {
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
     <a class="nav-link active" href="./index.html" aria-current="page"> 
-<span class="menu-text">Home</span></a>
+<span class="menu-text">Sobre</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./01-import-data.html"> 
-<span class="menu-text">1. Importação de Dados</span></a>
+<span class="menu-text">Dados</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./02-indicators.html"> 
+<span class="menu-text">Indicators</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -116,12 +120,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#dados-de-domicílios" id="toc-dados-de-domicílios" class="nav-link active" data-scroll-target="#dados-de-domicílios">Dados de Domicílios</a>
-  <ul class="collapse">
-  <li><a href="#censo-de-2022---ibge" id="toc-censo-de-2022---ibge" class="nav-link" data-scroll-target="#censo-de-2022---ibge">Censo de 2022 - IBGE</a></li>
+  <li><a href="#estrutura" id="toc-estrutura" class="nav-link active" data-scroll-target="#estrutura">Estrutura</a></li>
   <li><a href="#como-usar" id="toc-como-usar" class="nav-link" data-scroll-target="#como-usar">Como usar</a></li>
-  <li><a href="#estrutura" id="toc-estrutura" class="nav-link" data-scroll-target="#estrutura">Estrutura</a></li>
-  </ul></li>
   </ul>
 </nav>
     </div>
@@ -130,7 +130,8 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">censo2022-domicilios</h1>
+<h1 class="title">Dados de Domicílios</h1>
+<p class="subtitle lead">Censo de 2022 | IBGE</p>
 </div>
 
 
@@ -147,29 +148,25 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="dados-de-domicílios" class="level2">
-<h2 class="anchored" data-anchor-id="dados-de-domicílios">Dados de Domicílios</h2>
-<section id="censo-de-2022---ibge" class="level3">
-<h3 class="anchored" data-anchor-id="censo-de-2022---ibge">Censo de 2022 - IBGE</h3>
 <p>Este projeto processa e analisa os microdados do Censo Demográfico 2022.</p>
+<section id="estrutura" class="level3">
+<h3 class="anchored" data-anchor-id="estrutura">Estrutura</h3>
+<ul>
+<li><code>01-import-data.qmd</code> - Pipeline completo de download e conversão dos dados do IBGE</li>
+<li><code>02-indicators.qmd</code> - Criação dos indicadores exibidos na plataforma GeoReDUS</li>
+<li><code>data/</code> - Dados brutos e processados</li>
+<li><code>images/</code> - Imagens usadas</li>
+<li><code>docs/</code> - Site gerado (GitHub Pages)</li>
+</ul>
 </section>
 <section id="como-usar" class="level3">
 <h3 class="anchored" data-anchor-id="como-usar">Como usar</h3>
 <ol type="1">
-<li>Execute o pipeline de importação: <a href="./01-import-data.html"><strong>01-import-data.qmd</strong></a></li>
-<li>Os dados serão processados e organizados automaticamente</li>
+<li><p>Execute o pipeline de importação: <a href="./01-import-data.html"><strong>01-import-data.qmd</strong></a></p>
+<p>Os dados serão processados e organizados automaticamente</p></li>
 </ol>
-</section>
-<section id="estrutura" class="level3">
-<h3 class="anchored" data-anchor-id="estrutura">Estrutura</h3>
-<ul>
-<li><code>01-import-data.qmd</code> - Pipeline completo de download e conversão</li>
-<li><code>data/</code> - Dados brutos e processados</li>
-<li><code>docs/</code> - Site gerado (GitHub Pages)</li>
-</ul>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
