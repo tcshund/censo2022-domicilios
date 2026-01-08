@@ -8,7 +8,7 @@
 
 <meta name="author" content="Thais Cshunderlick">
 
-<title>Indicators – GeoReDUS - Domicílios</title>
+<title>Criação dos Indicadores – GeoReDUS - Domicílios</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -176,7 +176,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Indicators</h1>
+<h1 class="title">Criação dos Indicadores</h1>
 </div>
 
 
@@ -410,168 +410,256 @@ Dentre os domicílios particulares, recortes de tipo de residência (casas, apar
 <h3 class="anchored" data-anchor-id="criação-e-transformação-das-variáveis">4. Criação e transformação das variáveis</h3>
 <p>Com os dados já carregados, o script aplica operações do <em>dplyr</em>.<br>
 Cada linha indica uma nova <strong>coluna derivada.</strong></p>
+<p>Siglas do arquivo Básico do IBGE:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Sigla</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>DPPO</td>
+<td>Domicílio Particular Permanente Ocupado</td>
+</tr>
+<tr class="even">
+<td>DPIO</td>
+<td>Domicílio Particular Improvisado Ocupado</td>
+</tr>
+<tr class="odd">
+<td>DPPV</td>
+<td>Domicílio Particular Permanente Vago</td>
+</tr>
+<tr class="even">
+<td>DPPUO</td>
+<td>Domicílio Particular Permanente de Uso Ocasional</td>
+</tr>
+<tr class="odd">
+<td>DCCM</td>
+<td>Domicílio Coletivo Com Morador</td>
+</tr>
+<tr class="even">
+<td>DCSM</td>
+<td>Domicílio Coletivo Sem Morador</td>
+</tr>
+<tr class="odd">
+<td>DPO</td>
+<td>Domicílio Particular Ocupado (DPPO + DPIO)</td>
+</tr>
+</tbody>
+</table>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>basico <span class="ot">&lt;-</span> <span class="fu">read_parquet</span>(</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sprintf</span>(<span class="st">"%s/01_basico.parquet"</span>, pasta_pqs))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>domicilios <span class="ot">&lt;-</span> <span class="fu">read_parquet</span>(</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sprintf</span>(<span class="st">"%s/02_domicilio.parquet"</span>, pasta_pqs)) <span class="sc">%&gt;%</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">replace</span>(<span class="fu">is.na</span>(.), <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sprintf</span>(<span class="st">"%s/01_basico.parquet"</span>, pasta_pqs)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span><span class="fu">replace_na</span>(.x, <span class="dv">0</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      <span class="co"># # # Indicadores Absolutos</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>      <span class="co"># dom01 - Ocupação </span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      <span class="co"># total de domicílios (dppo+dpio+dccm) </span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom01_ocu_tot_1 =</span> V00001 <span class="sc">+</span> V00002 <span class="sc">+</span> V00003, </span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>      <span class="co"># total de moradores (em dppo+dpio+dccm)</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom01_ocu_tot_mor_1 =</span> V00005 <span class="sc">+</span> V00006 <span class="sc">+</span> V00007,</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>      <span class="co"># dom02 - Posse (apenas ocupados)</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>      <span class="co"># domicílios particulares </span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom02_dppo_tot_0 =</span> V00001, </span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>      <span class="co"># moradores em dom particulares (V00011 + V00014)</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom02_dppo_tot_mor_0 =</span> V00005, </span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom02_dppo_sex_m_0 =</span> V00011,</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom02_dppo_sex_f_0 =</span> V00014,</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom02_dpio_tot_0 =</span> V00002, <span class="co"># improvisados</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>      <span class="co"># dom03 - Domicílios Particulares</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Casas</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_cas_tot_1 =</span> V00047 <span class="sc">+</span> V00048, </span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_cas_tot_mor_1 =</span> V00084 <span class="sc">+</span> V00085,</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_cas_sex_m_1 =</span> V00502 <span class="sc">+</span> V00503,</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_cas_sex_f_1 =</span> V00505 <span class="sc">+</span> V00506,</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Apartamentos</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_apt_tot_0 =</span> V00049,</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_apt_tot_mor_0 =</span> V00086,</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_apt_sex_m_0 =</span> V00504,</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_apt_sex_f_0 =</span> V00507,</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Domicílios com mais de 6 moradores</span></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_6mor_tot_1 =</span>  V00022 <span class="sc">+</span> V00023 <span class="sc">+</span> V00024 <span class="sc">+</span> V00025 <span class="sc">+</span> V00026</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># # # Indicadores Relativos</span></span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># dom02 - Posse, em relação ao total de ocupados</span></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom02_dppo_tot_2 =</span> dom02_dppo_tot_0 <span class="sc">/</span> dom01_ocu_tot_1,</span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom02_dppo_tot_mor_2 =</span> dom02_dppo_tot_mor_0 <span class="sc">/</span> dom01_ocu_tot_mor_1,</span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom02_dppo_sex_f_2 =</span> dom02_dppo_sex_f_0 <span class="sc">/</span> dom02_dppo_tot_mor_0,</span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom02_dppo_sex_m_2 =</span> dom02_dppo_sex_m_0 <span class="sc">/</span> dom02_dppo_tot_mor_0,  </span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom02_dpio_tot_2 =</span> dom02_dpio_tot_0 <span class="sc">/</span> dom01_ocu_tot_1,</span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># dom03 - Domicílios Particulares </span></span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Casas</span></span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_cas_tot_2 =</span> dom03_cas_tot_1 <span class="sc">/</span> dom02_dppo_tot_0,</span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_cas_tot_mor_2 =</span> dom03_cas_tot_mor_1 <span class="sc">/</span> dom02_dppo_tot_mor_0,</span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_cas_sex_m_2 =</span> dom03_cas_sex_m_1 <span class="sc">/</span> dom02_dppo_sex_m_0,</span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_cas_sex_f_2 =</span> dom03_cas_sex_f_1 <span class="sc">/</span> dom02_dppo_sex_f_0,</span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Apartamentos</span></span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_apt_tot_2 =</span> dom03_apt_tot_0 <span class="sc">/</span> dom02_dppo_tot_0,</span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_apt_tot_mor_2 =</span> dom03_apt_tot_mor_0 <span class="sc">/</span> dom02_dppo_tot_mor_0,</span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_apt_sex_m_2 =</span> dom03_apt_sex_m_0 <span class="sc">/</span> dom02_dppo_sex_m_0,  </span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_apt_sex_f_2 =</span> dom03_apt_sex_f_0 <span class="sc">/</span> dom02_dppo_sex_f_0,</span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Domicílios com mais de 6 moradores</span></span>
-<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_6mor_tot_2 =</span> dom03_6mor_tot_1 <span class="sc">/</span> dom02_dppo_tot_0    </span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">matches</span>(<span class="st">"^(cd|dom)"</span>))<span class="sc">%&gt;%</span></span>
-<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Inclui "cn22" antes de cada um dos indicadores</span></span>
-<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(</span>
-<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> <span class="fu">paste0</span>(<span class="st">"cn22_"</span>, .x),</span>
-<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">starts_with</span>(<span class="st">"dom"</span>)</span>
-<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Total de Domicílios (dppo + dppv + dppuo + dpio + dccm + dcsm)</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom_bas_tot_0 =</span> V0002,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Total de Domicílios Particulares (dppo + dppv + dppuo + dpio)</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom_bas_part_0 =</span> V0003, </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Total de Domicílios Coletivos (dccm + dcsm)</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom_bas_col_0 =</span> V0004,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Total de Domicílios Particulares Ocupados (dppo + dpio)</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom_bas_dpo_0 =</span> V0007, <span class="co"># em tese deveria ser igual dom01_ocu_tot_1</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Total de Domicílios de Uso Ocasional ou Vazios (dppv + dppuo)</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom_bas_vaz_1 =</span> V0003 <span class="sc">-</span> V0007) <span class="sc">%&gt;%</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># # # # Indicadores Relativos</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Domicilios ocupados em relação os total</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom_bas_dpo_2 =</span> dom_bas_dpo_0 <span class="sc">/</span> dom_bas_tot_0,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Domicilios vazios em relação aos total</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom_bas_vaz_2 =</span> dom_bas_vaz_1 <span class="sc">/</span> dom_bas_tot_0)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>domicilios <span class="ot">&lt;-</span> <span class="fu">read_parquet</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sprintf</span>(<span class="st">"%s/02_domicilio.parquet"</span>, pasta_pqs)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">replace</span>(<span class="fu">is.na</span>(.), <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="co"># # # Indicadores Absolutos</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>      <span class="co"># dom01 - OCUPAÇÃO </span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      <span class="co"># total de domicílios (dppo+dpio+dccm) </span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom01_ocu_tot_1 =</span> V00001 <span class="sc">+</span> V00002 <span class="sc">+</span> V00003, </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>      <span class="co"># total de moradores (em dppo+dpio+dccm)</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom01_ocu_tot_mor_1 =</span> V00005 <span class="sc">+</span> V00006 <span class="sc">+</span> V00007,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>      <span class="co"># dom02 - PARTICULARES OCUPADOS</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>      <span class="co"># ----- DPPO -&gt; permanentes</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom02_dppo_tot_0 =</span> V00001, </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>      <span class="co"># moradores em dppo</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom02_dppo_tot_mor_0 =</span> V00005, </span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom02_dppo_sex_m_0 =</span> V00011,</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom02_dppo_sex_f_0 =</span> V00014,</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>      <span class="co"># ----- DPPO -&gt; improvisados</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom02_dpio_tot_0 =</span> V00002, </span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>      <span class="co"># dom03 - TIPOS DE DPPO</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Casas</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_cas_tot_1 =</span> V00047 <span class="sc">+</span> V00048, </span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_cas_tot_mor_1 =</span> V00084 <span class="sc">+</span> V00085,</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_cas_sex_m_1 =</span> V00502 <span class="sc">+</span> V00503,</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_cas_sex_f_1 =</span> V00505 <span class="sc">+</span> V00506,</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Apartamentos</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_apt_tot_0 =</span> V00049,</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_apt_tot_mor_0 =</span> V00086,</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_apt_sex_m_0 =</span> V00504,</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_apt_sex_f_0 =</span> V00507,</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Domicílios com mais de 6 moradores</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_6mor_tot_1 =</span> V00022 <span class="sc">+</span> V00023 <span class="sc">+</span> V00024 <span class="sc">+</span> V00025 <span class="sc">+</span> V00026,</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Domicílios com apenas 1 morador</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_1mor_tot_0 =</span> V00017,</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Sem banheiro nem sanitário</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom03_sban_tot_0 =</span> V00238,</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>      <span class="co"># dom04 - COLETIVOS</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>      <span class="co"># ----- DCCM -&gt; com morador</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom04_dccm_tot_0 =</span> V00003,</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>      <span class="co"># moradores em dccm</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom04_dccm_tot_mor_0 =</span> V00007,</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom04_dccm_sex_m_0 =</span> V00013,</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom04_dccm_sex_f_0 =</span> V00016,</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>      <span class="co"># tipos</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom04_dccm_asilo_0 =</span> V00059, </span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom04_dccm_hotel_0 =</span> V00060, <span class="co"># hotel ou pensão</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>      <span class="at">dom04_dccm_prisao_0 =</span> V00062, <span class="co"># penitenciária, centro de detenção e similar</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>    <span class="co"># # # Indicadores Relativos</span></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>    <span class="co"># dom02 - Posse, em relação ao total de ocupados</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom02_dppo_tot_2 =</span> dom02_dppo_tot_0 <span class="sc">/</span> dom01_ocu_tot_1,</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom02_dppo_tot_mor_2 =</span> dom02_dppo_tot_mor_0 <span class="sc">/</span> dom01_ocu_tot_mor_1,</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom02_dppo_sex_f_2 =</span> dom02_dppo_sex_f_0 <span class="sc">/</span> dom02_dppo_tot_mor_0,</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom02_dppo_sex_m_2 =</span> dom02_dppo_sex_m_0 <span class="sc">/</span> dom02_dppo_tot_mor_0,  </span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom02_dpio_tot_2 =</span> dom02_dpio_tot_0 <span class="sc">/</span> dom01_ocu_tot_1,</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>    <span class="co"># dom03 - Domicílios Particulares </span></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Casas</span></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_cas_tot_2 =</span> dom03_cas_tot_1 <span class="sc">/</span> dom02_dppo_tot_0,</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_cas_tot_mor_2 =</span> dom03_cas_tot_mor_1 <span class="sc">/</span> dom02_dppo_tot_mor_0,</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_cas_sex_m_2 =</span> dom03_cas_sex_m_1 <span class="sc">/</span> dom02_dppo_sex_m_0,</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_cas_sex_f_2 =</span> dom03_cas_sex_f_1 <span class="sc">/</span> dom02_dppo_sex_f_0,</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Apartamentos</span></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_apt_tot_2 =</span> dom03_apt_tot_0 <span class="sc">/</span> dom02_dppo_tot_0,</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_apt_tot_mor_2 =</span> dom03_apt_tot_mor_0 <span class="sc">/</span> dom02_dppo_tot_mor_0,</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_apt_sex_m_2 =</span> dom03_apt_sex_m_0 <span class="sc">/</span> dom02_dppo_sex_m_0,  </span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_apt_sex_f_2 =</span> dom03_apt_sex_f_0 <span class="sc">/</span> dom02_dppo_sex_f_0,</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Domicílios com mais de 6 moradores</span></span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">dom03_6mor_tot_2 =</span> dom03_6mor_tot_1 <span class="sc">/</span> dom02_dppo_tot_0    </span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">matches</span>(<span class="st">"^(cd|dom)"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="exportando-os-indicadores-de-domicílio" class="level3">
 <h3 class="anchored" data-anchor-id="exportando-os-indicadores-de-domicílio">5. Exportando os indicadores de Domicílio</h3>
 <p>As colunas criadas são unidas em novos csvs:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cn22dom_vars <span class="ot">&lt;-</span> basico <span class="sc">%&gt;%</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(domicilios, <span class="at">by =</span> <span class="st">"cd_setor"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_setor        =</span> cd_setor,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_bairro       =</span> cd_bairro,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_distrito     =</span> cd_dist,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_subdistrito  =</span> cd_subdist,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_municipio    =</span> cd_mun,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">situacao_setor   =</span> situacao,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_uf           =</span> cd_uf,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_bairro      =</span> nm_bairro,</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_distrito    =</span> nm_dist,</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_municipio   =</span> nm_mun,</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_subdistrito =</span> nm_subdist,</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_uf          =</span> nm_uf</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>id_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cod_setor"</span>,<span class="st">"cod_bairro"</span>,<span class="st">"cod_distrito"</span>,<span class="st">"cod_subdistrito"</span>,<span class="st">"cod_municipio"</span>,</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"situacao_setor"</span>,<span class="st">"cod_uf"</span>,</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"nome_bairro"</span>,<span class="st">"nome_distrito"</span>,<span class="st">"nome_municipio"</span>,<span class="st">"nome_subdistrito"</span>,<span class="st">"nome_uf"</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Selecionar IDs + TODAS as variáveis de indicadores</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>cn22dom_vars <span class="ot">&lt;-</span> cn22dom_vars <span class="sc">%&gt;%</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">all_of</span>(id_cols),</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"_(0|1|2)$"</span>)  <span class="co"># 0 = absoluto simples, 1 = absoluto composto, 2 = relativo</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Exportar arquivo único</span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(</span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>  cn22dom_vars,</span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sprintf</span>(<span class="st">"%s/cn22dom_vars.csv"</span>, pasta_out)</span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cn22dom_vars <span class="ot">&lt;-</span> basico <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(domicilios, <span class="at">by =</span> <span class="st">"cd_setor"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_setor        =</span> cd_setor,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_bairro       =</span> cd_bairro,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_distrito     =</span> cd_dist,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_subdistrito  =</span> cd_subdist,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_municipio    =</span> cd_mun,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">situacao_setor   =</span> situacao,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">cod_uf           =</span> cd_uf,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_bairro      =</span> nm_bairro,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_distrito    =</span> nm_dist,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_municipio   =</span> nm_mun,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_subdistrito =</span> nm_subdist,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">nome_uf          =</span> nm_uf</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>id_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cod_setor"</span>,<span class="st">"cod_bairro"</span>,<span class="st">"cod_distrito"</span>,<span class="st">"cod_subdistrito"</span>,<span class="st">"cod_municipio"</span>,</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"situacao_setor"</span>,<span class="st">"cod_uf"</span>,</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"nome_bairro"</span>,<span class="st">"nome_distrito"</span>,<span class="st">"nome_municipio"</span>,<span class="st">"nome_subdistrito"</span>,<span class="st">"nome_uf"</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Selecionar IDs + TODAS as variáveis de indicadores</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>cn22dom_vars <span class="ot">&lt;-</span> cn22dom_vars <span class="sc">%&gt;%</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">all_of</span>(id_cols),</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"_(0|1|2)$"</span>)</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Exportar arquivo</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  cn22dom_vars,</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sprintf</span>(<span class="st">"%s/cn22dom_vars.csv"</span>, pasta_out)</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="verificação-dos-indicadores-exportados" class="level3">
 <h3 class="anchored" data-anchor-id="verificação-dos-indicadores-exportados">6. Verificação dos indicadores exportados</h3>
 <p>Olhar geral no csv:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(cn22dom_vars)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(cn22dom_vars)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 468,099
-Columns: 42
-$ cod_setor                 &lt;chr&gt; "110001505000002", "110001505000003", "11000…
-$ cod_bairro                &lt;chr&gt; "1100015006", "1100015006", "1100015005", "1…
-$ cod_distrito              &lt;chr&gt; "110001505", "110001505", "110001505", "1100…
-$ cod_subdistrito           &lt;chr&gt; "11000150500", "11000150500", "11000150500",…
-$ cod_municipio             &lt;chr&gt; "1100015", "1100015", "1100015", "1100015", …
-$ situacao_setor            &lt;chr&gt; "Urbana", "Urbana", "Urbana", "Urbana", "Urb…
-$ cod_uf                    &lt;chr&gt; "11", "11", "11", "11", "11", "11", "11", "1…
-$ nome_bairro               &lt;chr&gt; "Redondo", "Redondo", "Princesa Isabel", "Pr…
-$ nome_distrito             &lt;chr&gt; "Alta Floresta D'Oeste", "Alta Floresta D'Oe…
-$ nome_municipio            &lt;chr&gt; "Alta Floresta D'Oeste", "Alta Floresta D'Oe…
-$ nome_subdistrito          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-$ nome_uf                   &lt;chr&gt; "Rondônia", "Rondônia", "Rondônia", "Rondôni…
-$ cn22_dom01_ocu_tot_1      &lt;dbl&gt; 336, 208, 85, 281, 291, 234, 329, 291, 100, …
-$ cn22_dom01_ocu_tot_mor_1  &lt;dbl&gt; 928, 556, 222, 783, 748, 631, 884, 762, 267,…
-$ cn22_dom02_dppo_tot_0     &lt;dbl&gt; 336, 208, 85, 281, 291, 234, 329, 291, 100, …
-$ cn22_dom02_dppo_tot_mor_0 &lt;dbl&gt; 928, 556, 222, 783, 748, 631, 884, 762, 267,…
-$ cn22_dom02_dppo_sex_m_0   &lt;dbl&gt; 428, 270, 108, 407, 373, 296, 403, 361, 141,…
-$ cn22_dom02_dppo_sex_f_0   &lt;dbl&gt; 500, 286, 114, 376, 375, 335, 481, 401, 126,…
-$ cn22_dom02_dpio_tot_0     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ cn22_dom03_cas_tot_1      &lt;dbl&gt; 335, 208, 85, 280, 291, 234, 328, 291, 100, …
-$ cn22_dom03_cas_tot_mor_1  &lt;dbl&gt; 926, 556, 222, 780, 748, 631, 882, 762, 267,…
-$ cn22_dom03_cas_sex_m_1    &lt;dbl&gt; 427, 270, 108, 405, 373, 296, 402, 361, 141,…
-$ cn22_dom03_cas_sex_f_1    &lt;dbl&gt; 499, 286, 114, 375, 375, 335, 480, 401, 126,…
-$ cn22_dom03_apt_tot_0      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0,…
-$ cn22_dom03_apt_tot_mor_0  &lt;dbl&gt; 0, 0, 0, 3, 0, 0, 0, 0, 0, 3, 7, 0, 0, 0, 0,…
-$ cn22_dom03_apt_sex_m_0    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ cn22_dom03_apt_sex_f_0    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0,…
-$ cn22_dom03_6mor_tot_1     &lt;dbl&gt; 8, 3, 0, 15, 0, 0, 0, 4, 0, 0, 5, 3, 3, 0, 4…
-$ cn22_dom02_dppo_tot_2     &lt;dbl&gt; 1.000000, 1.000000, 1.000000, 1.000000, 1.00…
-$ cn22_dom02_dppo_tot_mor_2 &lt;dbl&gt; 1.0000000, 1.0000000, 1.0000000, 1.0000000, …
-$ cn22_dom02_dppo_sex_f_2   &lt;dbl&gt; 0.5387931, 0.5143885, 0.5135135, 0.4802043, …
-$ cn22_dom02_dppo_sex_m_2   &lt;dbl&gt; 0.4612069, 0.4856115, 0.4864865, 0.5197957, …
-$ cn22_dom02_dpio_tot_2     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ cn22_dom03_cas_tot_2      &lt;dbl&gt; 0.9970238, 1.0000000, 1.0000000, 0.9964413, …
-$ cn22_dom03_cas_tot_mor_2  &lt;dbl&gt; 0.9978448, 1.0000000, 1.0000000, 0.9961686, …
-$ cn22_dom03_cas_sex_m_2    &lt;dbl&gt; 0.9976636, 1.0000000, 1.0000000, 0.9950860, …
-$ cn22_dom03_cas_sex_f_2    &lt;dbl&gt; 0.9980000, 1.0000000, 1.0000000, 0.9973404, …
-$ cn22_dom03_apt_tot_2      &lt;dbl&gt; 0.00000000, 0.00000000, 0.00000000, 0.000000…
-$ cn22_dom03_apt_tot_mor_2  &lt;dbl&gt; 0.000000000, 0.000000000, 0.000000000, 0.003…
-$ cn22_dom03_apt_sex_m_2    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-$ cn22_dom03_apt_sex_f_2    &lt;dbl&gt; 0.00000000, 0.00000000, 0.00000000, 0.000000…
-$ cn22_dom03_6mor_tot_2     &lt;dbl&gt; 0.02380952, 0.01442308, 0.00000000, 0.053380…</code></pre>
+Columns: 58
+$ cod_setor            &lt;chr&gt; "110001505000002", "110001505000003", "1100015050…
+$ cod_bairro           &lt;chr&gt; "1100015006", "1100015006", "1100015005", "110001…
+$ cod_distrito         &lt;chr&gt; "110001505", "110001505", "110001505", "110001505…
+$ cod_subdistrito      &lt;chr&gt; "11000150500", "11000150500", "11000150500", "110…
+$ cod_municipio        &lt;chr&gt; "1100015", "1100015", "1100015", "1100015", "1100…
+$ situacao_setor       &lt;chr&gt; "Urbana", "Urbana", "Urbana", "Urbana", "Urbana",…
+$ cod_uf               &lt;chr&gt; "11", "11", "11", "11", "11", "11", "11", "11", "…
+$ nome_bairro          &lt;chr&gt; "Redondo", "Redondo", "Princesa Isabel", "Princes…
+$ nome_distrito        &lt;chr&gt; "Alta Floresta D'Oeste", "Alta Floresta D'Oeste",…
+$ nome_municipio       &lt;chr&gt; "Alta Floresta D'Oeste", "Alta Floresta D'Oeste",…
+$ nome_subdistrito     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ nome_uf              &lt;chr&gt; "Rondônia", "Rondônia", "Rondônia", "Rondônia", "…
+$ dom_bas_tot_0        &lt;dbl&gt; 376, 243, 102, 318, 334, 298, 386, 357, 131, 167,…
+$ dom_bas_part_0       &lt;dbl&gt; 376, 243, 102, 318, 334, 298, 386, 357, 131, 167,…
+$ dom_bas_col_0        &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 3, 1, 0…
+$ dom_bas_dpo_0        &lt;dbl&gt; 336, 208, 85, 282, 291, 234, 329, 291, 100, 123, …
+$ dom_bas_vaz_1        &lt;dbl&gt; 40, 35, 17, 36, 43, 64, 57, 66, 31, 44, 58, 51, 4…
+$ dom_bas_dpo_2        &lt;dbl&gt; 0.8936170, 0.8559671, 0.8333333, 0.8867925, 0.871…
+$ dom_bas_vaz_2        &lt;dbl&gt; 0.1063830, 0.1440329, 0.1666667, 0.1132075, 0.128…
+$ dom01_ocu_tot_1      &lt;dbl&gt; 336, 208, 85, 281, 291, 234, 329, 291, 100, 123, …
+$ dom01_ocu_tot_mor_1  &lt;dbl&gt; 928, 556, 222, 783, 748, 631, 884, 762, 267, 311,…
+$ dom02_dppo_tot_0     &lt;dbl&gt; 336, 208, 85, 281, 291, 234, 329, 291, 100, 123, …
+$ dom02_dppo_tot_mor_0 &lt;dbl&gt; 928, 556, 222, 783, 748, 631, 884, 762, 267, 311,…
+$ dom02_dppo_sex_m_0   &lt;dbl&gt; 428, 270, 108, 407, 373, 296, 403, 361, 141, 144,…
+$ dom02_dppo_sex_f_0   &lt;dbl&gt; 500, 286, 114, 376, 375, 335, 481, 401, 126, 167,…
+$ dom02_dpio_tot_0     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+$ dom03_cas_tot_1      &lt;dbl&gt; 335, 208, 85, 280, 291, 234, 328, 291, 100, 121, …
+$ dom03_cas_tot_mor_1  &lt;dbl&gt; 926, 556, 222, 780, 748, 631, 882, 762, 267, 308,…
+$ dom03_cas_sex_m_1    &lt;dbl&gt; 427, 270, 108, 405, 373, 296, 402, 361, 141, 142,…
+$ dom03_cas_sex_f_1    &lt;dbl&gt; 499, 286, 114, 375, 375, 335, 480, 401, 126, 166,…
+$ dom03_apt_tot_0      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0…
+$ dom03_apt_tot_mor_0  &lt;dbl&gt; 0, 0, 0, 3, 0, 0, 0, 0, 0, 3, 7, 0, 0, 0, 0, 0, 0…
+$ dom03_apt_sex_m_0    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+$ dom03_apt_sex_f_0    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0…
+$ dom03_6mor_tot_1     &lt;dbl&gt; 8, 3, 0, 15, 0, 0, 0, 4, 0, 0, 5, 3, 3, 0, 4, 0, …
+$ dom03_1mor_tot_0     &lt;dbl&gt; 52, 39, 16, 55, 58, 31, 53, 58, 17, 24, 46, 28, 1…
+$ dom03_sban_tot_0     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+$ dom04_dccm_tot_0     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0…
+$ dom04_dccm_tot_mor_0 &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0…
+$ dom04_dccm_sex_m_0   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+$ dom04_dccm_sex_f_0   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0…
+$ dom04_dccm_asilo_0   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+$ dom04_dccm_hotel_0   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0…
+$ dom04_dccm_prisao_0  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+$ dom02_dppo_tot_2     &lt;dbl&gt; 1.000000, 1.000000, 1.000000, 1.000000, 1.000000,…
+$ dom02_dppo_tot_mor_2 &lt;dbl&gt; 1.0000000, 1.0000000, 1.0000000, 1.0000000, 1.000…
+$ dom02_dppo_sex_f_2   &lt;dbl&gt; 0.5387931, 0.5143885, 0.5135135, 0.4802043, 0.501…
+$ dom02_dppo_sex_m_2   &lt;dbl&gt; 0.4612069, 0.4856115, 0.4864865, 0.5197957, 0.498…
+$ dom02_dpio_tot_2     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+$ dom03_cas_tot_2      &lt;dbl&gt; 0.9970238, 1.0000000, 1.0000000, 0.9964413, 1.000…
+$ dom03_cas_tot_mor_2  &lt;dbl&gt; 0.9978448, 1.0000000, 1.0000000, 0.9961686, 1.000…
+$ dom03_cas_sex_m_2    &lt;dbl&gt; 0.9976636, 1.0000000, 1.0000000, 0.9950860, 1.000…
+$ dom03_cas_sex_f_2    &lt;dbl&gt; 0.9980000, 1.0000000, 1.0000000, 0.9973404, 1.000…
+$ dom03_apt_tot_2      &lt;dbl&gt; 0.00000000, 0.00000000, 0.00000000, 0.00000000, 0…
+$ dom03_apt_tot_mor_2  &lt;dbl&gt; 0.000000000, 0.000000000, 0.000000000, 0.00383141…
+$ dom03_apt_sex_m_2    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+$ dom03_apt_sex_f_2    &lt;dbl&gt; 0.00000000, 0.00000000, 0.00000000, 0.00000000, 0…
+$ dom03_6mor_tot_2     &lt;dbl&gt; 0.02380952, 0.01442308, 0.00000000, 0.05338078, 0…</code></pre>
 </div>
 </div>
 <p>Presença das 12 colunas de identificação do arquivo básico:</p>
@@ -584,58 +672,60 @@ $ cn22_dom03_6mor_tot_2     &lt;dbl&gt; 0.02380952, 0.01442308, 0.00000000, 0.05
 <h4 class="anchored" data-anchor-id="integridade-dos-dados-numéricos">Integridade dos dados numéricos</h4>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>- Dados numéricos: AVISO: 252282 problemas encontrados </code></pre>
+<pre><code>- Dados numéricos: AVISO: 267926 problemas encontrados </code></pre>
 </div>
 </div>
 <p>Se houver problemas, onde estão:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>problemas_tipo[ <span class="fu">rowSums</span>(problemas_tipo) <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>problemas_tipo[ <span class="fu">rowSums</span>(problemas_tipo) <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                          NA   NaN Inf NegInf
-cn22_dom02_dppo_tot_2      0 18011   0      0
-cn22_dom02_dppo_tot_mor_2  0 18011   0      0
-cn22_dom02_dppo_sex_f_2    0 18011   0      0
-cn22_dom02_dppo_sex_m_2    0 18011   0      0
-cn22_dom02_dpio_tot_2      0 18011   0      0
-cn22_dom03_cas_tot_2       0 18011   0      0
-cn22_dom03_cas_tot_mor_2   0 18011   0      0
-cn22_dom03_cas_sex_m_2     0 18019   0      0
-cn22_dom03_cas_sex_f_2     0 18067   0      0
-cn22_dom03_apt_tot_2       0 18011   0      0
-cn22_dom03_apt_tot_mor_2   0 18011   0      0
-cn22_dom03_apt_sex_m_2     0 18019   0      0
-cn22_dom03_apt_sex_f_2     0 18067   0      0
-cn22_dom03_6mor_tot_2      0 18011   0      0</code></pre>
+<pre><code>                     NA   NaN Inf NegInf
+dom_bas_dpo_2         0  7822   0      0
+dom_bas_vaz_2         0  7822   0      0
+dom02_dppo_tot_2      0 18011   0      0
+dom02_dppo_tot_mor_2  0 18011   0      0
+dom02_dppo_sex_f_2    0 18011   0      0
+dom02_dppo_sex_m_2    0 18011   0      0
+dom02_dpio_tot_2      0 18011   0      0
+dom03_cas_tot_2       0 18011   0      0
+dom03_cas_tot_mor_2   0 18011   0      0
+dom03_cas_sex_m_2     0 18019   0      0
+dom03_cas_sex_f_2     0 18067   0      0
+dom03_apt_tot_2       0 18011   0      0
+dom03_apt_tot_mor_2   0 18011   0      0
+dom03_apt_sex_m_2     0 18019   0      0
+dom03_apt_sex_f_2     0 18067   0      0
+dom03_6mor_tot_2      0 18011   0      0</code></pre>
 </div>
 </div>
 </section>
 <section id="verificação-amostral-por-município" class="level4">
 <h4 class="anchored" data-anchor-id="verificação-amostral-por-município">Verificação amostral por município</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>municipio_escolhido <span class="ot">&lt;-</span> <span class="st">"Goiânia"</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>cn22dom_vars <span class="sc">%&gt;%</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(nome_municipio <span class="sc">==</span> municipio_escolhido) <span class="sc">%&gt;%</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    cod_setor,</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"dom01.*tot"</span>)</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">width =</span> <span class="cn">Inf</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>municipio_escolhido <span class="ot">&lt;-</span> <span class="st">"Goiânia"</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>cn22dom_vars <span class="sc">%&gt;%</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(nome_municipio <span class="sc">==</span> municipio_escolhido) <span class="sc">%&gt;%</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    cod_setor,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matches</span>(<span class="st">"dom01.*tot"</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">width =</span> <span class="cn">Inf</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 3
-   cod_setor       cn22_dom01_ocu_tot_1 cn22_dom01_ocu_tot_mor_1
-   &lt;chr&gt;                          &lt;dbl&gt;                    &lt;dbl&gt;
- 1 520870705120019                  255                      649
- 2 520870705020005                  291                      806
- 3 520870705440017                  270                      649
- 4 520870705390018                  298                      846
- 5 520870705510031                  223                      639
- 6 520870705360036                  179                      532
- 7 520870705100005                  347                      892
- 8 520870705160031                  273                      724
- 9 520870705130100                  204                      656
-10 520870705120058                  283                      694</code></pre>
+   cod_setor       dom01_ocu_tot_1 dom01_ocu_tot_mor_1
+   &lt;chr&gt;                     &lt;dbl&gt;               &lt;dbl&gt;
+ 1 520870705350063             400                 995
+ 2 520870705100005             347                 892
+ 3 520870705510005             356                 972
+ 4 520870705620005             232                 648
+ 5 520870705280019             143                 504
+ 6 520870705350017             262                 799
+ 7 520870705380002             327                 905
+ 8 520870705590013             192                 512
+ 9 520870705370019             219                 581
+10 520870705260055             304                 809</code></pre>
 </div>
 </div>
 

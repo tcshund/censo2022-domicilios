@@ -1,5 +1,5 @@
 ---
-title: "Indicators"
+title: "Criação dos Indicadores"
 author: "Thais Cshunderlick"
 format: html
 editor: visual
@@ -125,8 +125,11 @@ Siglas do arquivo Básico do IBGE:
 #| message: false
 #| warning: false
 basico <- read_parquet(
-  sprintf("%s/01_basico.parquet", pasta_pqs)) %>%
-  replace(is.na(.), 0) %>%
+  sprintf("%s/01_basico.parquet", pasta_pqs)
+) %>%
+  mutate(
+    across(where(is.numeric), ~replace_na(.x, 0))
+  ) %>%
   mutate(
       # Total de Domicílios (dppo + dppv + dppuo + dpio + dccm + dcsm)
       dom_bas_tot_0 = V0002,
@@ -137,7 +140,13 @@ basico <- read_parquet(
       # Total de Domicílios Particulares Ocupados (dppo + dpio)
       dom_bas_dpo_0 = V0007, # em tese deveria ser igual dom01_ocu_tot_1
       # Total de Domicílios de Uso Ocasional ou Vazios (dppv + dppuo)
-      dom_bas_vaz_1 = V0003 - V0007)
+      dom_bas_vaz_1 = V0003 - V0007) %>%
+  mutate(
+    # # # # Indicadores Relativos
+    # Domicilios ocupados em relação os total
+    dom_bas_dpo_2 = dom_bas_dpo_0 / dom_bas_tot_0,
+    # Domicilios vazios em relação aos total
+    dom_bas_vaz_2 = dom_bas_vaz_1 / dom_bas_tot_0)
 ```
 
 ```{r}
@@ -186,7 +195,6 @@ domicilios <- read_parquet(
       # dom04 - COLETIVOS
       # ----- DCCM -> com morador
       dom04_dccm_tot_0 = V00003,
-      dom04_dccm_uni_0 = V01196, # unidade em dccm
       # moradores em dccm
       dom04_dccm_tot_mor_0 = V00007,
       dom04_dccm_sex_m_0 = V00013,
@@ -220,13 +228,7 @@ domicilios <- read_parquet(
     dom03_6mor_tot_2 = dom03_6mor_tot_1 / dom02_dppo_tot_0    
   ) %>%
   
-  select(matches("^(cd|dom)"))%>%
-
-  # Inclui "cn22" antes de cada um dos indicadores
-  rename_with(
-  ~ paste0("cn22_", .x),
-  starts_with("dom")
-  ) 
+  select(matches("^(cd|dom)"))
 ```
 
 ### 5. Exportando os indicadores de Domicílio
@@ -263,10 +265,10 @@ id_cols <- c(
 cn22dom_vars <- cn22dom_vars %>%
   select(
     all_of(id_cols),
-    matches("_(0|1|2)$")  # 0 = absoluto simples, 1 = absoluto composto, 2 = relativo
+    matches("_(0|1|2)$")
   )
 
-# Exportar arquivo único
+# Exportar arquivo
 write_csv(
   cn22dom_vars,
   sprintf("%s/cn22dom_vars.csv", pasta_out)
