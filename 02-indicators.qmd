@@ -108,34 +108,64 @@ Ao longo do fluxo, esses objetos transformados podem ser encadeados ou substitu�
 Com os dados já carregados, o script aplica operações do *dplyr*.\
 Cada linha indica uma nova **coluna derivada.**
 
+Siglas do arquivo Básico do IBGE:
+
+| Sigla | Descrição                                        |
+|-------|--------------------------------------------------|
+| DPPO  | Domicílio Particular Permanente Ocupado          |
+| DPIO  | Domicílio Particular Improvisado Ocupado         |
+| DPPV  | Domicílio Particular Permanente Vago             |
+| DPPUO | Domicílio Particular Permanente de Uso Ocasional |
+| DCCM  | Domicílio Coletivo Com Morador                   |
+| DCSM  | Domicílio Coletivo Sem Morador                   |
+| DPO   | Domicílio Particular Ocupado (DPPO + DPIO)       |
+
+```{r}
+#| label: indicadores-bas
+#| message: false
+#| warning: false
+basico <- read_parquet(
+  sprintf("%s/01_basico.parquet", pasta_pqs)) %>%
+  replace(is.na(.), 0) %>%
+  mutate(
+      # Total de Domicílios (dppo + dppv + dppuo + dpio + dccm + dcsm)
+      dom_bas_tot_0 = V0002,
+      # Total de Domicílios Particulares (dppo + dppv + dppuo + dpio)
+      dom_bas_part_0 = V0003, 
+      # Total de Domicílios Coletivos (dccm + dcsm)
+      dom_bas_col_0 = V0004,
+      # Total de Domicílios Particulares Ocupados (dppo + dpio)
+      dom_bas_dpo_0 = V0007, # em tese deveria ser igual dom01_ocu_tot_1
+      # Total de Domicílios de Uso Ocasional ou Vazios (dppv + dppuo)
+      dom_bas_vaz_1 = V0003 - V0007)
+```
+
 ```{r}
 #| label: indicadores-dom
 #| message: false
 #| warning: false
-basico <- read_parquet(
-  sprintf("%s/01_basico.parquet", pasta_pqs))
-
 domicilios <- read_parquet(
   sprintf("%s/02_domicilio.parquet", pasta_pqs)) %>%
   replace(is.na(.), 0) %>%
   mutate(
       # # # Indicadores Absolutos
-      # dom01 - Ocupação 
+      # dom01 - OCUPAÇÃO 
       # total de domicílios (dppo+dpio+dccm) 
       dom01_ocu_tot_1 = V00001 + V00002 + V00003, 
       # total de moradores (em dppo+dpio+dccm)
       dom01_ocu_tot_mor_1 = V00005 + V00006 + V00007,
       
-      # dom02 - Posse (apenas ocupados)
-      # domicílios particulares 
+      # dom02 - PARTICULARES OCUPADOS
+      # ----- DPPO -> permanentes
       dom02_dppo_tot_0 = V00001, 
-      # moradores em dom particulares (V00011 + V00014)
+      # moradores em dppo
       dom02_dppo_tot_mor_0 = V00005, 
       dom02_dppo_sex_m_0 = V00011,
       dom02_dppo_sex_f_0 = V00014,
-      dom02_dpio_tot_0 = V00002, # improvisados
+      # ----- DPPO -> improvisados
+      dom02_dpio_tot_0 = V00002, 
       
-      # dom03 - Domicílios Particulares
+      # dom03 - TIPOS DE DPPO
       # Casas
       dom03_cas_tot_1 = V00047 + V00048, 
       dom03_cas_tot_mor_1 = V00084 + V00085,
@@ -147,7 +177,24 @@ domicilios <- read_parquet(
       dom03_apt_sex_m_0 = V00504,
       dom03_apt_sex_f_0 = V00507,
       # Domicílios com mais de 6 moradores
-      dom03_6mor_tot_1 =  V00022 + V00023 + V00024 + V00025 + V00026
+      dom03_6mor_tot_1 = V00022 + V00023 + V00024 + V00025 + V00026,
+      # Domicílios com apenas 1 morador
+      dom03_1mor_tot_0 = V00017,
+      # Sem banheiro nem sanitário
+      dom03_sban_tot_0 = V00238,
+
+      # dom04 - COLETIVOS
+      # ----- DCCM -> com morador
+      dom04_dccm_tot_0 = V00003,
+      dom04_dccm_uni_0 = V01196, # unidade em dccm
+      # moradores em dccm
+      dom04_dccm_tot_mor_0 = V00007,
+      dom04_dccm_sex_m_0 = V00013,
+      dom04_dccm_sex_f_0 = V00016,
+      # tipos
+      dom04_dccm_asilo_0 = V00059, 
+      dom04_dccm_hotel_0 = V00060, # hotel ou pensão
+      dom04_dccm_prisao_0 = V00062, # penitenciária, centro de detenção e similar
   ) %>%
   mutate(
     # # # Indicadores Relativos
