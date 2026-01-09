@@ -55,7 +55,7 @@ dir.create(pasta_out, recursive = TRUE, showWarnings = FALSE)
 ### **2. Nomenclatura adotada**
 
 | **Tema** | **Subtema** | **ST** | **Descrição** | **Indicador/Variável** |
-|---------------|---------------|---------------|---------------|---------------|
+|----|----|----|----|----|
 | dom01 | Ocupação | ocu | Domicilios Ocupados | dom01_ocu |
 | dom02 | Posse | dppo | Domicílios Particulares Permanentes Ocupados | dom02_dppo |
 | dom02 | Posse | dpio | Domicílios Particulares Improvisados Ocupados | dom02_dpio |
